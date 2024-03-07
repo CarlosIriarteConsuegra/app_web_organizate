@@ -22,7 +22,7 @@
             <ng-container *ngIf="cursos && cursos.length > 0">
 
                 <p-table #dt [value]="cursos" scrollDirection="both" [scrollable]="true" scrollHeight="400px"
-                    [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                    [columns]="cols" responsiveLayout="scroll" [rows]="2"
                     [globalFilterFields]="['codigo','nombre','descripcion', 'idioma']" [paginator]="true"
                     [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" [(selection)]="selectedCursos"
                     selectionMode="multiple" [rowHover]="true" dataKey="id">
@@ -50,11 +50,9 @@
                             <td>
                                 <p-tableCheckbox [value]="curso"></p-tableCheckbox>
                             </td>
-                            <td style="width:100%; min-width:10rem;">
-                                <div
-                                    class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
-                                    <div
-                                        class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                            <td>
+                                <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
+                                    <div class="flex flex-row justify-content-between align-items-start flex-1 gap-4">
                                         <div class="flex flex-column align-items-center sm:align-items-start gap-3">
                                             <div class="text-2xl font-bold text-900">{{ curso.codigo }}-{{ curso.nombre
                                                 }}</div>

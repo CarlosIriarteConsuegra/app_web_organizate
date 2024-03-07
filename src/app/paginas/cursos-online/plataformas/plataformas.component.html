@@ -22,7 +22,7 @@
 
             <ng-container *ngIf="plataformas && plataformas.length > 0">
                 <p-table #dt [value]="plataformas" scrollDirection="both" [scrollable]="true" scrollHeight="400px"
-                    [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                    [columns]="cols" responsiveLayout="scroll" [rows]="2"
                     [globalFilterFields]="['codigo','nombre','descripcion']" [paginator]="true"
                     [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
                     currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} plataformas"
@@ -50,13 +50,13 @@
                             <td>
                                 <p-tableCheckbox [value]="plataforma"></p-tableCheckbox>
                             </td>
-                            <td style="width:100%; min-width:10rem;">
-                                <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
-                                    <img class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
+                            <td>
+                                <div class="flex flex-row xl:align-items-start p-4 gap-4 align-items-center" style="width:600px !important;">
+                                    <img class="w-2 shadow-2 block xl:block mx-auto border-round"
                                         [src]="plataforma.logo" [alt]="plataforma.nombre" />
                                     <div
-                                        class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-                                        <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                        class="flex flex-row justify-content-between align-items-start flex-1 gap-4">
+                                        <div class="flex flex-column align-items-center sm:align-items-start gap-2">
                                             <div class="text-2xl font-bold text-900">{{ plataforma.codigo }}-{{ plataforma.nombre }}</div>
                                             <div>
                                                 <p><span class="font-bold">Cursos: </span>{{ plataforma.cursosPlataforma ? plataforma.cursosPlataforma.length : 0 }}</p>
