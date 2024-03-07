@@ -1,5 +1,5 @@
 {
     "API_ENDPOINTS": {
-        "microproxy_cursos": "http://localhost:11001/"
+        "microproxy_cursos": "https://microproxycourses-production.up.railway.app/"
     }
 }
