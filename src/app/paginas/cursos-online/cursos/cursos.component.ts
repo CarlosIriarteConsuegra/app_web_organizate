@@ -1,0 +1,238 @@
+import { Component } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
+import { CursoModel } from '../../../models/cursos/curso.model';
+import { CursosService } from '../../../services/cursos-online/cursos.service';
+import { PlataformaModel } from '../../../models/cursos/plataforma.model';
+import { PlataformasService } from '../../../services/cursos-online/plataformas.service';
+import { AreaCursoService } from '../../../services/cursos-online/area-curso.service';
+import { ProfesoresService } from '../../../services/cursos-online/profesores.service';
+import { AreaCursoModel } from '../../../models/cursos/area_curso.model';
+import { ProfesorModel } from '../../../models/cursos/profesor.model';
+import { DatePipe } from '@angular/common';
+
+@Component({
+    selector: 'app-cursos',
+    templateUrl: './cursos.component.html',
+    styleUrl: './cursos.component.scss'
+})
+export class CursosComponent {
+    cursos: CursoModel[] = [];
+    cursosEdit: CursoModel[] = [];
+    curso: CursoModel = {};
+    selectedCursos: CursoModel[] = [];
+    cursoDialog: boolean = false;
+    deleteCursoDialog: boolean = false;
+    deleteCursosDialog: boolean = false;
+    submitted: boolean = false;
+    cols!: any[];
+    rowsPerPageOptions = [5, 10, 20];
+    plataformas: any[] = [];
+    selectdPlataforma: PlataformaModel | undefined = {};
+    areasCursos: any[] = [];
+    selectdAreasCursos: AreaCursoModel[] | undefined = [];
+    profesores: ProfesorModel[] = [];
+    selectedProfesores: ProfesorModel[] = [];
+
+    constructor(
+        private cursosService: CursosService,
+        private plataformasService: PlataformasService,
+        private areaCursosService: AreaCursoService,
+        private profesoresService: ProfesoresService,
+        private messageService: MessageService,
+        public datePipe: DatePipe) {
+
+    }
+
+    ngOnInit() {
+        this.cursosService.getCursos().subscribe({
+            next: async (data) => {
+                if (data && data.length > 0) {
+                    this.cursos = data;
+                } else {
+                    this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes cursos registrados", life: 3000 });
+                }
+            },
+            error: async (error) => {
+                this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+            }
+        })
+
+
+        this.plataformasService.getPlataforms().subscribe({
+            next: async (data) => {
+                if (data && data.length > 0) {
+                    this.plataformas = data;
+                    this.plataformas.forEach(objeto => {
+                        delete objeto.cursos;
+                    });
+                } else {
+                    this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes plataformas registradas", life: 3000 });
+                }
+            },
+            error: async (error) => {
+                this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+            }
+        });
+
+        this.areaCursosService.getAreasCursos().subscribe({
+            next: async (data) => {
+                if (data && data.length > 0) {
+                    this.areasCursos = data;
+                    this.areasCursos.forEach(objeto => {
+                        delete objeto.cursos;
+                    });
+                } else {
+                    this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes areas de cursos registradas", life: 3000 });
+                }
+            },
+            error: async (error) => {
+                this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+            }
+        });
+
+        this.profesoresService.getProfesores().subscribe({
+            next: async (data) => {
+                if (data && data.length > 0) {
+                    this.profesores = data;
+                    this.profesores.forEach(objeto => {
+                        delete objeto.cursos;
+                    });
+                } else {
+                    this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes profesores registrados", life: 3000 });
+                }
+            },
+            error: async (error) => {
+                this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+            }
+        });
+
+        this.cols = [
+            { field: 'curso', header: 'Curso' },
+        ];
+    }
+
+    getNivel(nivel: number): string {
+        switch (nivel) {
+            case 1:
+                return 'Principiante';
+            case 2:
+                return 'Intermedio';
+            case 3:
+                return 'Avanzado';
+            case 4:
+                return 'Profesional';
+            default:
+                return "Indefinido";
+        }
+    }
+
+    openNew() {
+        this.selectdPlataforma = {};
+        this.selectdAreasCursos = [];
+        this.selectedProfesores = [];
+        this.curso = {};
+        this.submitted = false;
+        this.cursoDialog = true;
+    }
+
+    deleteSelectedCursos() {
+        this.deleteCursosDialog = true;
+    }
+
+    editCurso(curso: CursoModel) {
+        this.curso = { ...curso };
+        this.selectdPlataforma = this.curso.plataforma ? this.curso.plataforma : {};
+        this.selectdAreasCursos = this.curso.areascurso ? this.curso.areascurso : [];
+        this.selectedProfesores = this.curso.profesores ? this.curso.profesores : [];
+
+        this.cursoDialog = true;
+    }
+
+    deleteCurso(curso: CursoModel) {
+        this.deleteCursoDialog = true;
+        this.curso = { ...curso };
+        this.selectedCursos.push(this.curso);
+    }
+
+    async confirmDeleteSelected() {
+        this.deleteCursosDialog = false;
+        this.selectedCursos = this.cursosService.deleteCursos(this.selectedCursos);
+        this.cursos = this.cursos.filter(val => !this.selectedCursos.includes(val));
+        this.selectedCursos = [];
+    }
+
+    confirmDelete() {
+        this.deleteCursoDialog = false;
+        this.cursosService.deleteCurso(this.curso);
+        this.cursos = this.cursos.filter(val => val.id !== this.curso.id);
+        this.curso = {};
+    }
+
+    hideDialog() {
+        this.cursoDialog = false;
+        this.submitted = false;
+    }
+
+    saveCurso() {
+        this.submitted = true;
+        this.cursosEdit = this.cursos;
+        this.curso.plataforma = this.selectdPlataforma;
+        this.curso.areascurso = this.selectdAreasCursos;
+        this.curso.profesores = this.selectedProfesores;
+        if (this.curso.codigo?.trim() && this.curso.nombre?.trim() && this.curso.descripcion?.trim() && this.curso.nivel != null && this.curso.idioma?.trim()) {
+            if (this.curso.id) {
+                this.cursosService.putCurso(this.curso).subscribe({
+                    next: async (data) => {
+                        this.cursosEdit[this.findIndexById(this.curso.codigo)] = data;
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Curso Actualizado', life: 3000 });
+                    },
+                    error: (error) => {
+                        if (typeof error.error.statusMessage == "string") {
+                            this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                        } else {
+                            for (let mensaje of error.error.statusMessage.message) {
+                                this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
+                            }
+                        }
+                    }
+                })
+            } else {
+                this.cursosService.postCurso(this.curso).subscribe({
+                    next: async (data) => {
+                        data.rutas = [];
+                        this.cursosEdit.push(data);
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Curso Creado', life: 3000 });
+                    },
+                    error: (error) => {
+                        if (typeof error.error.statusMessage == "string") {
+                            this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                        } else {
+                            for (let mensaje of error.error.statusMessage.message) {
+                                this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
+                            }
+                        }
+                    }
+                })
+            }
+            this.cursoDialog = false;
+        } else {
+            this.messageService.add({ severity: 'error', summary: 'Campos sin llenar', detail: "Algunos campos obligatorios no han sido digilenciados", life: 3000 });
+        }
+    }
+
+    findIndexById(codigo: string | undefined): number {
+        let index = -1;
+        for (let i = 0; i < this.cursos.length; i++) {
+            if (this.cursos[i].codigo === codigo) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+
+    onGlobalFilter(table: Table, event: Event) {
+        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+}

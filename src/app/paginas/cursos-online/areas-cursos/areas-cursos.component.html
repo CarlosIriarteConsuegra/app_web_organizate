@@ -1,0 +1,220 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+                            (click)="deleteSelectedAreasCursos()"
+                            [disabled]="!selectedAreasCursos || !selectedAreasCursos.length"
+                            *ngIf="areasCursos && areasCursos.length > 0"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <h5 class="m-0" *ngIf="areasCursos && areasCursos.length > 0">Total {{ areasCursos.length }} Areas de Cursos</h5>
+                </ng-template>
+            </p-toolbar>
+
+            <ng-container *ngIf="areasCursos && areasCursos.length > 0">
+                <p-table #dt [value]="areasCursos" scrollDirection="both" [scrollable]="true" scrollHeight="400px"
+                    [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['codigo','nombre']"
+                    [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} areas de cursos"
+                    [(selection)]="selectedAreasCursos" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Areas de Cursos</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
+                                    placeholder="Buscar..." class="w-full sm:w-auto" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th class="text-center">Area de Cursos </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-areaCurso>
+                        <tr>
+                            <td>
+                                <p-tableCheckbox [value]="areaCurso"></p-tableCheckbox>
+                            </td>
+                            <td style="width:100%; min-width:10rem;">
+                                <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
+                                    <div
+                                        class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                                        <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                            <div class="text-2xl font-bold text-900">{{ areaCurso.codigo }}-{{ areaCurso.nombre }}</div>
+                                            <div>
+                                                <p><span class="font-bold">Cursos: </span>{{ areaCurso.cursos ? areaCurso.cursos.length : 0 }}</p>
+                                            </div>
+                                            <!--<p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>-->
+                                        </div>
+                                        <div class="flex flex-column">
+                                            <div class="flex">
+                                                <button pButton pRipple icon="pi pi-pencil"
+                                                    class="p-button-rounded p-button-success mr-2"
+                                                    (click)="editAreaCursos(areaCurso)"></button>
+                                                <button pButton pRipple icon="pi pi-trash"
+                                                    class="p-button-rounded p-button-warning"
+                                                    (click)="deleteAreaCursos(areaCurso)"></button>
+                                            </div>
+                                            <div class="mt-4">
+                                                <p><span class="font-bold">Creado el: </span>{{ this.datePipe.transform(areaCurso.createdAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
+                                            </div>
+                                            <div>
+                                                <p><span class="font-bold">Ultima actualización: </span>{{ this.datePipe.transform(areaCurso.updateAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </ng-container>
+
+            <ng-container *ngIf="!(areasCursos && areasCursos.length > 0)">
+                <h1 class="text-center">No tienes areas de cursos registradas</h1>
+            </ng-container>
+        </div>
+
+        <p-dialog [(visible)]="areaCursosDialog" [style]="{width: '500px'}" header="Detalles del Area de Cursos"
+            [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                @if (areaCursos.id) {
+                <div class="field">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" pInputText id="codigo" disabled [(ngModel)]="areaCursos.codigo" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !areaCursos.codigo}" />
+                </div>
+                } @else {
+                <div class="field">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" pInputText id="codigo" [(ngModel)]="areaCursos.codigo" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !areaCursos.codigo}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !areaCursos.codigo">El codigo es
+                        requerido.</small>
+                </div>
+                }
+
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="areaCursos.nombre" maxlength="200" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !areaCursos.nombre}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !areaCursos.nombre">El nombre es
+                        requerido.</small>
+                </div>
+
+                @if (areaCursos.cursos) {
+                <p-table #dt [value]="areaCursos.cursos" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                    [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} cursos" [rowHover]="true"
+                    dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Cursos</h5>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="codigo">Codigo <p-sortIcon field="codigo"></p-sortIcon></th>
+                            <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
+                            <th pSortableColumn="descripcion">Descripción <p-sortIcon field="descripcion"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="descripcion">Nivel <p-sortIcon field="descripcion"></p-sortIcon></th>
+                            <th pSortableColumn="linkCurso">Curso Plataforma <p-sortIcon field="linkCurso"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="descargarCurso">Descargar Curso <p-sortIcon
+                                    field="descargarCurso"></p-sortIcon></th>
+                            <th pSortableColumn="creacion">Creación <p-sortIcon field="creacion"></p-sortIcon></th>
+                            <th pSortableColumn="actualizacion">Actualización <p-sortIcon
+                                    field="actualizacion"></p-sortIcon></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-curso>
+                        <tr>
+                            <td style="width:14%; min-width:10rem;"><span class="p-column-title">Codigo</span>
+                                {{curso.codigo}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Nombre</span>
+                                {{curso.nombre}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Descripción</span>
+                                {{curso.descripcion}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Nivel</span>
+                                {{curso.nivel}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Curso Plataforma</span>
+                                {{curso.linkCurso}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Descargar Curso</span>
+                                {{curso.linkCursoTeleg}}
+                            </td>
+                            <td style="width:50%; min-width:16rem;">
+                                <span class="p-column-title">Creación</span>
+                                {{curso.createdAt}}
+                            </td>
+                            <td style="width:50%; min-width:16rem;">
+                                <span class="p-column-title">Actualización</span>
+                                {{curso.updateAt}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                }
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveAreaCursos()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteAreaCursosDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="areaCursos">¿Esta seguro/a de eliminar este area de cursos
+                    <b>{{areaCursos.nombre}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteAreaCursosDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteAreasCursosDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>¿Esta seguro/a de eliminar las areas de cursos seleccionadas?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteAreasCursosDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

@@ -1,0 +1,190 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+                            (click)="deleteSelectedRutas()"
+                            [disabled]="!selectedRutas || !selectedRutas.length"
+                            *ngIf="rutas && rutas.length > 0"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <h5 class="m-0" *ngIf="rutas && rutas.length > 0">Total {{ rutas.length }}
+                        Rutas</h5>
+                </ng-template>
+            </p-toolbar>
+
+            <ng-container *ngIf="rutas && rutas.length > 0">
+                <p-table #dt [value]="rutas" scrollDirection="both" [scrollable]="true" scrollHeight="1000px"
+                    [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                    [globalFilterFields]="['codigo','nombre','descripcion']" [paginator]="true"
+                    [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} rutas"
+                    [(selection)]="selectedRutas" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Rutas</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
+                                    placeholder="Buscar..." class="w-full sm:w-auto" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th class="text-center">Ruta</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-ruta>
+                        <tr>
+                            <td>
+                                <p-tableCheckbox [value]="ruta"></p-tableCheckbox>
+                            </td>
+                            <td style="width:100%; min-width:10rem;">
+                                <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
+                                    <div
+                                        class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                                        <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                            <div class="text-2xl font-bold text-900">{{ ruta.codigo }}-{{ ruta.nombre }}</div>
+                                            <div>
+                                                <p><span class="font-bold">Cursos: </span>{{ ruta.cursos ? ruta.cursos.length : 0 }}</p>
+                                            </div>
+                                            <!--<p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>-->
+                                            <div class="text-1 text-700">
+                                                <p>{{ ruta.descripcion }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-column">
+                                            <div class="flex">
+                                                <button pButton pRipple icon="pi pi-pencil"
+                                                    class="p-button-rounded p-button-success mr-2"
+                                                    (click)="editRuta(ruta)"></button>
+                                                <button pButton pRipple icon="pi pi-trash"
+                                                    class="p-button-rounded p-button-warning"
+                                                    (click)="deleteRuta(ruta)"></button>
+                                            </div>
+                                            <div class="mt-4">
+                                                <p><span class="font-bold">Creado el: </span>{{ this.datePipe.transform(ruta.createdAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
+                                            </div>
+                                            <div>
+                                                <p><span class="font-bold">Ultima actualización: </span>{{ this.datePipe.transform(ruta.updateAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </ng-container>
+            <ng-container *ngIf="!(rutas && rutas.length > 0)">
+                <h1 class="text-center">No tienes rutas registradas</h1>
+            </ng-container>
+        </div>
+
+        <p-dialog [(visible)]="rutaDialog" [style]="{width: '500px'}" header="Detalles de la Plataforma"
+            [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                @if (ruta.id) {
+                <div class="field">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" pInputText id="codigo" disabled [(ngModel)]="ruta.codigo" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !ruta.codigo}" />
+                </div>
+                } @else {
+                <div class="field">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" pInputText id="codigo" [(ngModel)]="ruta.codigo" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !ruta.codigo}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !ruta.codigo">El codigo es
+                        requerido.</small>
+                </div>
+                }
+
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="ruta.nombre" maxlength="200" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !ruta.nombre}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !ruta.nombre">El nombre es
+                        requerido.</small>
+                </div>
+                <div class="field">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" pInputTextarea [(ngModel)]="ruta.descripcion" maxlength="500"
+                        required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !ruta.descripcion}"
+                        rows="3" cols="20"></textarea>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !ruta.descripcion">La descripción es
+                        requerida.</small>
+                </div>
+
+                <div class="field">
+                    <label for="cursos">Cursos de la ruta</label>
+                    <p-multiSelect [options]="cursos" optionLabel="nombre" [(ngModel)]="selectedCursos"  scrollHeight="100px"
+                        placeholder="Seleccionar cursos de la ruta" display="chip">
+                    </p-multiSelect>
+            </div>
+
+
+                @if (selectedCursos) {
+                    <p-orderList [value]="selectedCursos" [listStyle]="{ 'max-height': '30rem' }" header="Cursos" [dragdrop]="true">
+                        <ng-template let-curso pTemplate="item">
+                            <div class="flex flex-wrap align-items-center gap-3">
+                                <div class="flex-1 flex flex-column gap-2">
+                                    <span class="font-bold">{{ curso.codigo }}-{{ curso.nombre }}</span>
+                                    <div class="flex align-items-center gap-2">
+                                        <span>{{ curso.descripcion }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-orderList>
+                }
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveRuta()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteRutaDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="ruta">¿Esta seguro/a de eliminar la ruta <b>{{ruta.nombre}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteRutaDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteRutasDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>¿Esta seguro/a de eliminar las plataformas seleccionadas?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteRutasDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

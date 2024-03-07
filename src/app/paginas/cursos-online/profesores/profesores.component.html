@@ -1,0 +1,309 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+                            (click)="deleteSelectedProfesores()"
+                            [disabled]="!selectedProfesores || !selectedProfesores.length"
+                            *ngIf="profesores && profesores.length > 0"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <h5 class="m-0" *ngIf="profesores && profesores.length > 0">Total {{ profesores.length }} Profesores
+                    </h5>
+                </ng-template>
+            </p-toolbar>
+
+            <ng-container *ngIf="profesores && profesores.length > 0">
+                <p-table #dt [value]="profesores" scrollDirection="both" [scrollable]="true" scrollHeight="400px"
+                    [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                    [globalFilterFields]="['codigo','nombre', 'descripcion']" [paginator]="true"
+                    [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} profesores"
+                    [(selection)]="selectedProfesores" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Areas de Cursos</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
+                                    placeholder="Buscar..." class="w-full sm:w-auto" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th class="text-center">Profesor</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-profesor>
+                        <tr>
+                            <td>
+                                <p-tableCheckbox [value]="profesor"></p-tableCheckbox>
+                            </td>
+                            <td style="width:100%; min-width:10rem;">
+                                <div
+                                    class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
+                                    <div 
+                                        class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                                        <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                            <div class="text-2xl font-bold text-900">{{ profesor.codigo }}-{{
+                                                profesor.nombre }}</div>
+                                            <div>
+                                                <p><span class="font-bold">Cursos: </span>{{ profesor.cursos ?
+                                                    profesor.cursos.length : 0 }}</p>
+                                            </div>
+                                            <!--<p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>-->
+                                            <div class="text-1 text-700">
+                                                <p>{{ profesor.descripcion }}</p>
+                                            </div>
+                                            <div class="text-1 text-700">
+                                                <p class="font-bold">Redes sociales</p>
+                                                <div>
+                                                    <a href="{{profesor.facebook}}" target="_blank" rel="noopener noreferrer" class="m-2"><i
+                                                            class="pi pi-facebook m.2" style="font-size: 1.8rem; color: #3b5998"></i></a>
+
+                                                    <a href="{{profesor.linkedin}}" target="_blank" rel="noopener noreferrer" class="m-2"><i
+                                                            class="pi pi-linkedin" style="font-size: 1.8rem; color: #0e76a8"></i></a>
+
+                                                    <a href="{{profesor.youtube}}" target="_blank" rel="noopener noreferrer" class="m-2"><i
+                                                            class="pi pi-youtube" style="font-size: 1.8rem; color: #c4302b"></i></a>
+
+                                                    <a href="{{profesor.instagram}}" target="_blank" rel="noopener noreferrer" class="m-2"><i
+                                                            class="pi pi-instagram p-1" style="font-size: 1.5rem; color: #ffffff; background: #f09433; 
+                                                            background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+                                                            background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+                                                            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+                                                            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );"></i></a>
+
+                                                    <a href="{{profesor.x}}" target="_blank" rel="noopener noreferrer" class="m-2"><svg
+                                                            xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                                            fill="currentColor" class="bi bi-twitter-x p-1"
+                                                            viewBox="0 0 16 16" style="color: #ffffff; background-color: #000000;">
+                                                            <path
+                                                                d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
+                                                        </svg></a>
+
+                                                        <a href="{{profesor.correo}}" target="_blank" rel="noopener noreferrer" class="m-2"><i
+                                                            class="pi pi-envelope" style="font-size: 1.8rem; color: #c4302b"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-column">
+                                            <div class="flex">
+                                                <button pButton pRipple icon="pi pi-pencil"
+                                                    class="p-button-rounded p-button-success mr-2"
+                                                    (click)="editProfesor(profesor)"></button>
+                                                <button pButton pRipple icon="pi pi-trash"
+                                                    class="p-button-rounded p-button-warning"
+                                                    (click)="deleteProfesor(profesor)"></button>
+                                            </div>
+                                            <div class="mt-4">
+                                                <p><span class="font-bold">Creado el: </span>{{
+                                                    this.datePipe.transform(profesor.createdAt, 'dd/MM/yyyy HH:MM:SS')
+                                                    }}</p>
+                                            </div>
+                                            <div>
+                                                <p><span class="font-bold">Ultima actualización: </span>{{
+                                                    this.datePipe.transform(profesor.updateAt, 'dd/MM/yyyy HH:MM:SS') }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </ng-container>
+
+            <ng-container *ngIf="!(profesores && profesores.length > 0)">
+                <h1 class="text-center">No tienes profesores registrados</h1>
+            </ng-container>
+        </div>
+
+        <p-dialog [(visible)]="profesorDialog" [style]="{width: '500px'}" header="Detalles del Area de Cursos"
+            [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                @if (profesor.id) {
+                <div class="field">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" pInputText id="codigo" disabled [(ngModel)]="profesor.codigo" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !profesor.codigo}" />
+                </div>
+                } @else {
+                <div class="field">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" pInputText id="codigo" [(ngModel)]="profesor.codigo" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !profesor.codigo}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !profesor.codigo">El codigo es
+                        requerido.</small>
+                </div>
+                }
+
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="profesor.nombre" maxlength="200" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !profesor.nombre}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !profesor.nombre">El nombre es
+                        requerido.</small>
+                </div>
+
+                <div class="field">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" pInputTextarea [(ngModel)]="profesor.descripcion" maxlength="500"
+                        required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !profesor.descripcion}"
+                        rows="3" cols="20"></textarea>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !profesor.descripcion">La descripción es
+                        requerida.</small>
+                </div>
+                <div class="field">
+                    <label>Redes sociales</label>
+                    <div class="formgrid grid">
+                        <div class="field col">
+                            <label for="linkedin">Linkedin</label>
+                            <input type="text" pInputText id="linkedin" maxlength="150" [(ngModel)]="profesor.linkedin"
+                                autofocus />
+                        </div>
+                        <div class="field col">
+                            <label for="youtube">Youtube</label>
+                            <input type="text" pInputText id="youtube" maxlength="200" [(ngModel)]="profesor.youtube"
+                                autofocus />
+                        </div>
+                    </div>
+                    <div class="formgrid grid">
+                        <div class="field col">
+                            <label for="facebook">Facebook</label>
+                            <input type="text" pInputText id="facebook" maxlength="150" [(ngModel)]="profesor.facebook"
+                                autofocus />
+                        </div>
+                        <div class="field col">
+                            <label for="x">X</label>
+                            <input type="text" pInputText id="x" maxlength="200" [(ngModel)]="profesor.x" autofocus />
+                        </div>
+                    </div>
+                    <div class="formgrid grid">
+                        <div class="field col">
+                            <label for="instagram">Instagram</label>
+                            <input type="text" pInputText id="instagram" maxlength="150"
+                                [(ngModel)]="profesor.instagram" autofocus />
+                        </div>
+                        <div class="field col">
+                            <label for="correo">Correo</label>
+                            <input type="email" pInputText id="correo" maxlength="200" [(ngModel)]="profesor.correo"
+                                autofocus />
+                        </div>
+                    </div>
+                </div>
+
+                @if (profesor.cursos) {
+                <p-table #dt [value]="profesor.cursos" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                    [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} cursos" [rowHover]="true"
+                    dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Cursos</h5>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="codigo">Codigo <p-sortIcon field="codigo"></p-sortIcon></th>
+                            <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
+                            <th pSortableColumn="descripcion">Descripción <p-sortIcon field="descripcion"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="descripcion">Nivel <p-sortIcon field="descripcion"></p-sortIcon></th>
+                            <th pSortableColumn="linkCurso">Curso Plataforma <p-sortIcon field="linkCurso"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="descargarCurso">Descargar Curso <p-sortIcon
+                                    field="descargarCurso"></p-sortIcon></th>
+                            <th pSortableColumn="creacion">Creación <p-sortIcon field="creacion"></p-sortIcon></th>
+                            <th pSortableColumn="actualizacion">Actualización <p-sortIcon
+                                    field="actualizacion"></p-sortIcon></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-curso>
+                        <tr>
+                            <td style="width:14%; min-width:10rem;"><span class="p-column-title">Codigo</span>
+                                {{curso.codigo}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Nombre</span>
+                                {{curso.nombre}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Descripción</span>
+                                {{curso.descripcion}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Nivel</span>
+                                {{curso.nivel}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Curso Plataforma</span>
+                                {{curso.linkCurso}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Descargar Curso</span>
+                                {{curso.linkCursoTeleg}}
+                            </td>
+                            <td style="width:50%; min-width:16rem;">
+                                <span class="p-column-title">Creación</span>
+                                {{curso.createdAt}}
+                            </td>
+                            <td style="width:50%; min-width:16rem;">
+                                <span class="p-column-title">Actualización</span>
+                                {{curso.updateAt}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                }
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveAreaCursos()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteProfesorDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="profesor">¿Esta seguro/a de eliminar este area de cursos <b>{{profesor.nombre}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteProfesorDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteProfesoresDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>¿Esta seguro/a de eliminar las areas de cursos seleccionadas?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteProfesoresDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

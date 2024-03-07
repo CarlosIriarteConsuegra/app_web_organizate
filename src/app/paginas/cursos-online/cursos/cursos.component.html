@@ -1,0 +1,355 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+                            (click)="deleteSelectedCursos()" [disabled]="!selectedCursos || !selectedCursos.length"
+                            *ngIf="cursos && cursos.length > 0"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <h5 class="m-0" *ngIf="cursos && cursos.length > 0">Total {{ cursos ? cursos.length : 0}} Cursos
+                    </h5>
+                </ng-template>
+            </p-toolbar>
+            <ng-container *ngIf="cursos && cursos.length > 0">
+
+                <p-table #dt [value]="cursos" scrollDirection="both" [scrollable]="true" scrollHeight="400px"
+                    [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                    [globalFilterFields]="['codigo','nombre','descripcion', 'idioma']" [paginator]="true"
+                    [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" [(selection)]="selectedCursos"
+                    selectionMode="multiple" [rowHover]="true" dataKey="id">
+
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Cursos</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
+                                    placeholder="Buscar..." class="w-full sm:w-auto" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th class="text-center">Curso</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-curso>
+                        <tr>
+                            <td>
+                                <p-tableCheckbox [value]="curso"></p-tableCheckbox>
+                            </td>
+                            <td style="width:100%; min-width:10rem;">
+                                <div
+                                    class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
+                                    <div
+                                        class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                                        <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                            <div class="text-2xl font-bold text-900">{{ curso.codigo }}-{{ curso.nombre
+                                                }}</div>
+                                            <div>
+                                                <p><span class="font-bold">Nivel: </span>{{ curso.nivel }}<br>
+                                                    <span class="font-bold">Idioma: </span>{{ curso.idioma }}<br>
+                                                    <span class="font-bold">Plataforma: </span>{{ curso.plataforma ?
+                                                    curso.plataforma.nombre : "No esta asignado"}}
+                                                </p>
+                                                <p></p>
+                                            </div>
+                                            <!--<p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>-->
+                                            <div class="text-1 text-700">
+                                                <p>{{ curso.descripcion }}</p>
+                                            </div>
+                                            <div class="flex align-items-center gap-3">
+                                                <div class="flex align-items-center gap-3">
+                                                    <a [href]="curso.linkCurso" target="_blank"
+                                                        rel="noopener noreferrer">
+                                                        <button pButton pRipple label="Ir al curso"
+                                                            class="p-button-info"></button>
+                                                    </a>
+                                                    <!--<p-tag [value]="item.inventoryStatus" [severity]="getSeverity(item)"></p-tag>-->
+                                                </div>
+                                                <div class="flex align-items-center gap-3">
+                                                    <a [href]="curso.linkCursoTeleg" target="_blank"
+                                                        rel="noopener noreferrer">
+                                                        <button pButton pRipple label="Descargar curso"
+                                                            class="p-button-info"></button>
+                                                    </a>
+                                                    <!--<p-tag [value]="item.inventoryStatus" [severity]="getSeverity(item)"></p-tag>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-column">
+                                            <div class="flex">
+                                                <button pButton pRipple icon="pi pi-pencil"
+                                                    class="p-button-rounded p-button-success mr-2"
+                                                    (click)="editCurso(curso)"></button>
+                                                <button pButton pRipple icon="pi pi-trash"
+                                                    class="p-button-rounded p-button-warning"
+                                                    (click)="deleteCurso(curso)"></button>
+                                            </div>
+                                            <div>
+
+
+                                                @if (curso.areascurso != null && curso.areascurso.length > 0) {
+                                                <div>
+                                                    <h5 class="inline-block">Areas del Curso: </h5>
+                                                        <span class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
+                                                        style="border: solid 1px #3b82f6; border-radius: 5px;" *ngFor="let areaCursos of curso.areascurso;">{{ areaCursos.nombre
+                                                            }}</span>
+                                                </div>
+                                                }@else {
+                                                <h5 class="mt-2 mb-2">No hay areas de cursos asignadas</h5>
+                                                }
+
+                                                @if (curso.profesores != null && curso.profesores.length > 0) {
+                                                <div>
+                                                    <h5 class="inline-block">Profesores: </h5>
+                                                        <span class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
+                                                        style="border: solid 1px #3b82f6; border-radius: 5px;" *ngFor="let profesor of curso.profesores;">{{ profesor.nombre }}</span>
+                                                </div>
+                                                }@else {
+                                                <h5 class="mt-2 mb-2">No hay profesores asignados</h5>
+                                                }
+
+                                                @if (curso.rutas != null && curso.rutas.length > 0) {
+                                                <div>
+                                                    <h5 class="inline-block">Rutas: </h5>
+                                                    <span
+                                                        class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
+                                                        style="border: solid 1px #3b82f6; border-radius: 5px;"
+                                                        *ngFor="let ruta of curso.rutas;">{{ ruta.nombre }}</span>
+
+                                                </div>
+                                                }@else {
+                                                <h5 class="mt-2 mb-2">No esta en una ruta de aprendizaje</h5>
+                                                }
+                                            </div>
+                                            <div class="mt-4">
+                                                <p><span class="font-bold">Creado el: </span>{{
+                                                    this.datePipe.transform(curso.createdAt, 'dd/MM/yyyy HH:MM:SS') }}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <p><span class="font-bold">Ultima actualización: </span>{{
+                                                    this.datePipe.transform(curso.updateAt, 'dd/MM/yyyy HH:MM:SS') }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </ng-container>
+            <ng-container *ngIf="!(cursos && cursos.length > 0)">
+                <h1 class="text-center">No tienes cursos registrados</h1>
+            </ng-container>
+        </div>
+
+        <p-dialog [(visible)]="cursoDialog" [style]="{width: '500px'}" header="Detalles del Curso" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="codigo">Codigo</label>
+                        @if (curso.id) {
+                        <input type="text" pInputText id="codigo" disabled [(ngModel)]="curso.codigo" required autofocus
+                            [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.codigo}" />
+                        } @else {
+                        <input type="text" pInputText id="codigo" [(ngModel)]="curso.codigo" required autofocus
+                            [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.codigo}" />
+                        }
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.codigo">El codigo es
+                            requerido.</small>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="curso.nombre" maxlength="200" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.nombre}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.nombre">El nombre es
+                        requerido.</small>
+                </div>
+
+                <div class="field">
+                    <label for="plataforma">Plataforma</label>
+                    <p-dropdown [options]="plataformas" inputId="plataforma" [(ngModel)]="selectdPlataforma"
+                        optionLabel="nombre" placeholder="Seleccionar plataforma">
+                    </p-dropdown>
+                </div>
+
+                <div class="field">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" pInputTextarea [(ngModel)]="curso.descripcion" maxlength="500" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.descripcion}" rows="3"
+                        cols="20"></textarea>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.descripcion">La descripción es
+                        requerida.</small>
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="nivel">Nivel del Curso</label>
+                        <input type="number" pInputText id="link" maxlength="200" [(ngModel)]="curso.nivel" required
+                            autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.nivel}" />
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.nivel">El nivel es
+                            requerido.</small>
+                    </div>
+                    <div class="field col">
+                        <label for="idioma">Idioma</label>
+                        <input type="text" pInputText id="idioma" maxlength="25" [(ngModel)]="curso.idioma" required
+                            autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.idioma}" />
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.idioma">El idioma es
+                            requerido.</small>
+                    </div>
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="link">Link</label>
+                        <input type="text" pInputText id="logo" maxlength="150" [(ngModel)]="curso.linkCurso" required
+                            autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.linkCurso}" />
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.linkCurso">El logo es
+                            requerido.</small>
+                    </div>
+                    <div class="field col">
+                        <label for="linkDescargar">Link Descargar Curso</label>
+                        <input type="text" pInputText id="link" maxlength="200" [(ngModel)]="curso.linkCursoTeleg"
+                            required autofocus
+                            [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.linkCursoTeleg}" />
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.linkCursoTeleg">El link es
+                            requerido.</small>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="areascurso">Areas del Curso</label>
+                    <p-multiSelect [options]="areasCursos" [(ngModel)]="selectdAreasCursos" optionLabel="nombre"
+                        placeholder="Seleccionar areas del curso" display="chip">
+                        <ng-template let-item pTemplate="selectdAreasCursos">
+                            <div>
+                                <span>{{ item.codigo }}</span>-<span>{{ item.nombre }}</span>
+                            </div>
+                        </ng-template>
+                    </p-multiSelect>
+                </div>
+                <div class="field">
+                    <label for="profesores">Profesores del Curso</label>
+                    <p-multiSelect [options]="profesores" optionLabel="nombre" [(ngModel)]="selectedProfesores"
+                        placeholder="Seleccionar profesores del curso" display="chip">
+                    </p-multiSelect>
+                </div>
+
+                <div class="field">
+                    @if (selectdAreasCursos != null && selectdAreasCursos.length > 0) {
+                    <div>
+                        <h3>Areas del Curso</h3>
+                        <div class="min-w-max inline-block bg-primary p-2 m-2"
+                            style="border: solid 1px #3b82f6; border-radius: 5px;"
+                            *ngFor="let areaCursos of selectdAreasCursos;">
+                            <span class="font-bold text-white">{{ areaCursos.nombre }}</span>
+                        </div>
+                    </div>
+                    }@else {
+                    <div>
+                        <h3 class="mt-2 mb-2">No hay areas de cursos asignadas</h3>
+                    </div>
+
+                    }
+                </div>
+
+                <div class="field">
+                    @if (selectedProfesores != null && selectedProfesores.length > 0) {
+                    <div>
+                        <h3>Profesores</h3>
+                        <div class="min-w-max inline-block bg-primary p-2 m-2"
+                            style="border: solid 1px #3b82f6; border-radius: 5px;"
+                            *ngFor="let profesor of selectedProfesores;">
+                            <span class="font-bold text-white">{{ profesor.nombre }}</span>
+                        </div>
+                    </div>
+                    }@else {
+                    <h3 class="mt-2 mb-2">No hay profesores asignados</h3>
+                    }
+                </div>
+
+                <div class="field">
+                    @if (curso.rutas != null && curso.rutas.length > 0) {
+                    <div>
+                        <h3>Rutas</h3>
+                        <div class="min-w-max inline-block bg-primary p-2 m-2"
+                            style="border: solid 1px #3b82f6; border-radius: 5px;" *ngFor="let ruta of curso.rutas;">
+                            <span class="font-bold text-white">{{ ruta.nombre }}</span>
+                        </div>
+                    </div>
+                    }@else {
+                    <h3 class="mt-2 mb-2">No esta en una ruta de aprendizaje</h3>
+                    }
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveCurso()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteCursoDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="curso">¿Esta seguro/a de eliminar la plataforma <b>{{curso.nombre}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteCursoDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteCursoDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="curso">¿Esta seguro/a de eliminar la plataforma <b>{{curso.nombre}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteCursoDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteCursosDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>¿Esta seguro/a de eliminar las plataformas seleccionadas?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteCursosDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

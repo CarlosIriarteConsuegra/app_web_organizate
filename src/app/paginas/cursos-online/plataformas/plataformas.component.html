@@ -1,0 +1,260 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+                            (click)="deleteSelectedPlataformas()"
+                            [disabled]="!selectedPlataformas || !selectedPlataformas.length"
+                            *ngIf="plataformas && plataformas.length > 0"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <h5 class="m-0" *ngIf="plataformas && plataformas.length > 0">Total {{ plataformas.length }}
+                        Plataformas</h5>
+                </ng-template>
+            </p-toolbar>
+
+            <ng-container *ngIf="plataformas && plataformas.length > 0">
+                <p-table #dt [value]="plataformas" scrollDirection="both" [scrollable]="true" scrollHeight="400px"
+                    [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                    [globalFilterFields]="['codigo','nombre','descripcion']" [paginator]="true"
+                    [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} plataformas"
+                    [(selection)]="selectedPlataformas" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Plataformas</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
+                                    placeholder="Buscar..." class="w-full sm:w-auto" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th class="text-center">Plataforma</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-plataforma>
+                        <tr>
+                            <td>
+                                <p-tableCheckbox [value]="plataforma"></p-tableCheckbox>
+                            </td>
+                            <td style="width:100%; min-width:10rem;">
+                                <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
+                                    <img class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
+                                        [src]="plataforma.logo" [alt]="plataforma.nombre" />
+                                    <div
+                                        class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                                        <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                            <div class="text-2xl font-bold text-900">{{ plataforma.codigo }}-{{ plataforma.nombre }}</div>
+                                            <div>
+                                                <p><span class="font-bold">Cursos: </span>{{ plataforma.cursosPlataforma ? plataforma.cursosPlataforma.length : 0 }}</p>
+                                            </div>
+                                            <!--<p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>-->
+                                            <div class="text-1 text-700">
+                                                <p>{{ plataforma.descripcion }}</p>
+                                            </div>
+                                            <div class="flex align-items-center gap-3">
+                                                <a [href]="plataforma.link" target="_blank" rel="noopener noreferrer">
+                                                    <button pButton pRipple label="Ir a la plataforma"
+                                                        class="p-button-info"></button>
+                                                </a>
+                                                <!--<p-tag [value]="item.inventoryStatus" [severity]="getSeverity(item)"></p-tag>-->
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-column">
+                                            <div class="flex">
+                                                <button pButton pRipple icon="pi pi-pencil"
+                                                    class="p-button-rounded p-button-success mr-2"
+                                                    (click)="editPlataforma(plataforma)"></button>
+                                                <button pButton pRipple icon="pi pi-trash"
+                                                    class="p-button-rounded p-button-warning"
+                                                    (click)="deletePlataforma(plataforma)"></button>
+                                            </div>
+                                            <div class="mt-4">
+                                                <p><span class="font-bold">Creado el: </span>{{ this.datePipe.transform(plataforma.createdAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
+                                            </div>
+                                            <div>
+                                                <p><span class="font-bold">Ultima actualización: </span>{{ this.datePipe.transform(plataforma.updateAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </ng-container>
+            <ng-container *ngIf="!(plataformas && plataformas.length > 0)">
+                <h1 class="text-center">No tienes plataformas registradas</h1>
+            </ng-container>
+        </div>
+
+        <p-dialog [(visible)]="plataformaDialog" [style]="{width: '500px'}" header="Detalles de la Plataforma"
+            [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <img [src]="plataforma.logo" [alt]="plataforma.logo" width="100"
+                    class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="plataforma.logo">
+
+                @if (plataforma.id) {
+                <div class="field">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" pInputText id="codigo" disabled [(ngModel)]="plataforma.codigo" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !plataforma.codigo}" />
+                </div>
+                } @else {
+                <div class="field">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" pInputText id="codigo" [(ngModel)]="plataforma.codigo" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !plataforma.codigo}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !plataforma.codigo">El codigo es
+                        requerido.</small>
+                </div>
+                }
+
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="plataforma.nombre" maxlength="200" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !plataforma.nombre}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !plataforma.nombre">El nombre es
+                        requerido.</small>
+                </div>
+                <div class="field">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" pInputTextarea [(ngModel)]="plataforma.descripcion" maxlength="500"
+                        required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !plataforma.descripcion}"
+                        rows="3" cols="20"></textarea>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !plataforma.descripcion">La descripción es
+                        requerida.</small>
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="logo">Logo</label>
+                        <input type="text" pInputText id="logo" maxlength="150" [(ngModel)]="plataforma.logo" required
+                            autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !plataforma.logo}" />
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !plataforma.logo">El logo es
+                            requerido.</small>
+                    </div>
+                    <div class="field col">
+                        <label for="link">Link</label>
+                        <input type="text" pInputText id="link" maxlength="200" [(ngModel)]="plataforma.link" required
+                            autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !plataforma.link}" />
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !plataforma.link">El link es
+                            requerido.</small>
+                    </div>
+                </div>
+
+                @if (plataforma.cursosPlataforma) {
+                <p-table #dt [value]="plataforma.cursosPlataforma" [columns]="cols" responsiveLayout="scroll"
+                    [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} cursos" [rowHover]="true"
+                    dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Cursos</h5>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="codigo">Codigo <p-sortIcon field="codigo"></p-sortIcon></th>
+                            <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
+                            <th pSortableColumn="descripcion">Descripción <p-sortIcon field="descripcion"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="descripcion">Nivel <p-sortIcon field="descripcion"></p-sortIcon></th>
+                            <th pSortableColumn="linkCurso">Curso Plataforma <p-sortIcon field="linkCurso"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="descargarCurso">Descargar Curso <p-sortIcon
+                                    field="descargarCurso"></p-sortIcon></th>
+                            <th pSortableColumn="creacion">Creación <p-sortIcon field="creacion"></p-sortIcon></th>
+                            <th pSortableColumn="actualizacion">Actualización <p-sortIcon
+                                    field="actualizacion"></p-sortIcon></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-curso>
+                        <tr>
+                            <td style="width:14%; min-width:10rem;"><span class="p-column-title">Codigo</span>
+                                {{curso.codigo}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Nombre</span>
+                                {{curso.nombre}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Descripción</span>
+                                {{curso.descripcion}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Nivel</span>
+                                {{curso.nivel}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Curso Plataforma</span>
+                                {{curso.linkCurso}}
+                            </td>
+                            <td style="width:14%; min-width:10rem;">
+                                <span class="p-column-title">Descargar Curso</span>
+                                {{curso.linkCursoTeleg}}
+                            </td>
+                            <td style="width:50%; min-width:16rem;">
+                                <span class="p-column-title">Creación</span>
+                                {{curso.createdAt}}
+                            </td>
+                            <td style="width:50%; min-width:16rem;">
+                                <span class="p-column-title">Actualización</span>
+                                {{curso.updateAt}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                }
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="savePlataform()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deletePlataformaDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="plataforma">¿Esta seguro/a de eliminar la plataforma <b>{{plataforma.nombre}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deletePlataformaDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deletePlataformasDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>¿Esta seguro/a de eliminar las plataformas seleccionadas?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deletePlataformasDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>
