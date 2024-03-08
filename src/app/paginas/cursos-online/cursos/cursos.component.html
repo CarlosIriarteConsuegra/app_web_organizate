@@ -1,14 +1,13 @@
 <div class="grid">
-    <div class="col-12">
-        <div class="card px-6 py-6">
-
+    <div class="col-12 p-0 lg:p-3">
+        <div class="card px-3 py-3 lg:px-5 lg:py-5">
             <p-toast></p-toast>
-            <p-toolbar styleClass="mb-4">
+            <p-toolbar styleClass="mb-4 p-2">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2"
+                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2 p-2"
                             (click)="openNew()"></button>
-                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger p-2"
                             (click)="deleteSelectedCursos()" [disabled]="!selectedCursos || !selectedCursos.length"
                             *ngIf="cursos && cursos.length > 0"></button>
                     </div>
@@ -27,8 +26,8 @@
                     [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" [(selection)]="selectedCursos"
                     selectionMode="multiple" [rowHover]="true" dataKey="id">
 
-                    <ng-template pTemplate="caption">
-                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                    <ng-template pTemplate="caption" styleClass="p-2">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center p-0">
                             <h5 class="m-0">Cursos</h5>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search"></i>
@@ -37,10 +36,10 @@
                             </span>
                         </div>
                     </ng-template>
-                    <ng-template pTemplate="header">
+                    <ng-template pTemplate="header" styleClass="p-1">
                         <tr>
-                            <th style="width: 3rem">
-                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            <th class="p-0 text-center">
+                                <p-tableHeaderCheckbox ></p-tableHeaderCheckbox>
                             </th>
                             <th class="text-center">Curso</th>
                         </tr>
@@ -51,9 +50,10 @@
                                 <p-tableCheckbox [value]="curso"></p-tableCheckbox>
                             </td>
                             <td>
-                                <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
-                                    <div class="flex flex-row justify-content-between align-items-start flex-1 gap-4">
-                                        <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                <div class="flex flex-row p-2 gap-3 align-items-start" style="width:700px !important;">
+                                    <div
+                                        class="flex flex-row justify-content-between align-items-start flex-1 gap-4">
+                                        <div class="flex flex-column align-items-start gap-2">
                                             <div class="text-2xl font-bold text-900">{{ curso.codigo }}-{{ curso.nombre
                                                 }}</div>
                                             <div>
