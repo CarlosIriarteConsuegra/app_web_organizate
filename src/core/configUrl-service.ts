@@ -15,16 +15,19 @@ export class ConfigUrlService {
             this._env = 'development';
             if (environment.production)
                 this._env = 'production';
-            console.log(this._env)
-            this._http.get('./assets/config/' + this._env + '.json').subscribe((data) => {
+            console.log(this._env);
+
+            this._http.get('assets/config/' + this._env + '.json').subscribe({
+                next: async (data) => {
                     this._config = data;
                     console.log(this._config)
                     resolve(true);
                 },
-                (error: any) => {
+                error: async (error) => {
                     console.error(error);
                     return (error.json().error || 'Server error');
-                });
+                }
+            });
         });
     }
     // Is app in the development mode?
