@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from '../../services/app-layout.service';
+import { TokenService } from '../../services/seguridad/token.service';
 
 @Component({
   selector: 'app-menu',
@@ -8,10 +9,18 @@ import { LayoutService } from '../../services/app-layout.service';
 })
 export class AppMenuComponent implements OnInit {
   model: any[] = [];
-
-  constructor(public layoutService: LayoutService) { }
+  seguridad: any = {};
+  constructor(public layoutService: LayoutService, private tokenService: TokenService) { }
 
   ngOnInit() {
+    if(this.tokenService.isAdmin()){
+      this.seguridad = {
+        label: 'Seguridad',
+        items: [
+          { label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['/seguridad/usuarios'] }
+        ]
+      };
+    }
     this.model = [
       {
         label: 'Principal',
@@ -29,6 +38,8 @@ export class AppMenuComponent implements OnInit {
           { label: 'Plataformas', icon: 'pi pi-fw pi-globe', routerLink: ['/cursos-online/plataformas'] }
         ]
       },
+      this.seguridad
+      ,
       /*{
         label: 'UI Components',
         items: [

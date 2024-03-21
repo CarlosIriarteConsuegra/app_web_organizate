@@ -14,6 +14,7 @@ import { SessionGuardian } from './guardians/session.guardian';
                 children: [
                     { path: '', component: InicioComponent, canActivate: [AuthGuardian] },
                     { path: 'cursos-online', loadChildren: () => import('./paginas/cursos-online/cursos-online.module').then(m => m.CursosOnlineModule), canActivate: [AuthGuardian] },
+                    { path: 'seguridad', loadChildren: () => import('./paginas/usuarios/usuarios.module').then(m => m.UsuariosModule), canActivate: [AuthGuardian] },
                 ]
             },
             { path: 'auth', loadChildren: () => import('./paginas/auth/auth.module').then(m => m.AuthModule), canActivate: [SessionGuardian] },

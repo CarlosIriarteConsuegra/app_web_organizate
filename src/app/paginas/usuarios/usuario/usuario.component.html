@@ -1,0 +1,170 @@
+<div class="grid">
+    <div class="col-12 p-0 lg:p-3">
+        <div class="card px-3 py-3 lg:px-5 lg:py-5">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2 p-2"
+                            (click)="openNew()" *ngIf="tokenService.isAdmin()"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger p-2"
+                            (click)="deleteSelectedUsuarios()"
+                            [disabled]="!selectedUsuarios || !selectedUsuarios.length"
+                            *ngIf="tokenService.isAdmin() && usuarios && usuarios.length > 0"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <h5 class="m-0" *ngIf="usuarios && usuarios.length > 0">Total {{ usuarios.length }}
+                        Usuario</h5>
+                </ng-template>
+            </p-toolbar>
+
+            <ng-container *ngIf="usuarios && usuarios.length > 0">
+                <p-table #dt [value]="usuarios" scrollDirection="both" [scrollable]="true" scrollHeight="400px"
+                    [columns]="cols" responsiveLayout="scroll" [rows]="2"
+                    [globalFilterFields]="['codigo','nombre','descripcion']" [paginator]="true"
+                    [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} usuarios"
+                    [(selection)]="selectedUsuarios" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Plataformas</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
+                                    placeholder="Buscar..." class="w-full sm:w-auto" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem" *ngIf="tokenService.isAdmin()">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th class="text-center">Plataforma</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-usuario>
+                        <tr>
+                            <td *ngIf="tokenService.isAdmin()">
+                                <p-tableCheckbox [value]="usuario"></p-tableCheckbox>
+                            </td>
+                            <td>
+                                <div class="flex flex-row xl:align-items-start p-4 gap-4 align-items-center" style="width:600px !important;">
+                                    <div
+                                        class="flex flex-row justify-content-between align-items-start flex-1 gap-4">
+                                        <div class="flex flex-column align-items-center sm:align-items-start gap-2">
+                                            <div class="text-2xl font-bold text-900">{{ usuario.codigo }}-{{ usuario.nombre }}</div>
+                                            <div class="text-2 font-bold text-700">Correo: {{ usuario.email }}</div>
+                                            <div class="text-2 font-bold text-700">Rol: {{ usuario.rol? usuario.rol.codigo : "Sin rol" }}</div>
+                                            <!--<p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>-->
+
+                                        </div>
+                                        <div class="flex flex-column">
+                                            <div class="flex" *ngIf="tokenService.isAdmin()">
+                                                <button pButton pRipple icon="pi pi-pencil"
+                                                    class="p-button-rounded p-button-success mr-2"
+                                                    (click)="editUsuario(usuario)"></button>
+                                                <button pButton pRipple icon="pi pi-trash"
+                                                    class="p-button-rounded p-button-warning"
+                                                    (click)="deleteUsuario(usuario)"></button>
+                                            </div>
+                                            <div class="mt-4">
+                                                <p><span class="font-bold">Creado el: </span>{{ this.datePipe.transform(usuario.createdAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
+                                            </div>
+                                            <div>
+                                                <p><span class="font-bold">Ultima actualización: </span>{{ this.datePipe.transform(usuario.updateAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </ng-container>
+            <ng-container *ngIf="!(usuarios && usuarios.length > 0)">
+                <h1 class="text-center">No tienes usuarios registrados</h1>
+            </ng-container>
+        </div>
+
+        <p-dialog [(visible)]="usuarioDialog" [style]="{width: '500px'}" header="Detalles de la Plataforma"
+            [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                @if (usuario.id) {
+                <div class="field">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" pInputText id="codigo" disabled [(ngModel)]="usuario.codigo" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !usuario.codigo}" />
+                </div>
+                } @else {
+                <div class="field">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" pInputText id="codigo" [(ngModel)]="usuario.codigo" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !usuario.codigo}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !usuario.codigo">El codigo es
+                        requerido.</small>
+                </div>
+                }
+
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="usuario.nombre" maxlength="200" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !usuario.nombre}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !usuario.nombre">El nombre es
+                        requerido.</small>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="usuario.email" maxlength="200" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !usuario.email}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !usuario.email">El email es
+                        requerido.</small>
+                </div>
+
+                <div class="field">
+                    <label for="pass">Contraseña</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="usuario.pass" minlength="10"
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !usuario.pass}" />
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveUsuarios()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteUsuarioDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="usuario">¿Esta seguro/a de eliminar la plataforma <b>{{usuario.nombre}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteUsuarioDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteUsuariosDialog" header="Confirmar eliminación" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>¿Esta seguro/a de eliminar las usuarios seleccionadas?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteUsuariosDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Si"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>
