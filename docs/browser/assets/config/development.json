@@ -1,0 +1,6 @@
+{
+    "API_ENDPOINTS": {
+        "microproxy_seguridad": "http://localhost:11002/",
+        "microproxy_cursos": "http://localhost:11001/"
+    }
+}
