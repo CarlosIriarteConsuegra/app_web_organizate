@@ -16,7 +16,7 @@ export class ConfigUrlService {
             if (environment.production)
                 this._env = 'production';
             console.log(this._env);
-            this._http.get('/assets/config/' + this._env + '.json').subscribe({
+            this._http.get('assets/config/' + this._env + '.json').subscribe({
                 next: async (data) => {
                     this._config = data;
                     environment.microproxy_cursos = this.getApi("microproxy_cursos");
