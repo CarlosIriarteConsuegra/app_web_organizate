@@ -32,6 +32,7 @@ import { CursosService } from '../../services/cursos-online/cursos.service';
 import { DataViewModule } from 'primeng/dataview';
 import { DatePipe } from '@angular/common';
 import { RutasService } from '../../services/cursos-online/rutas.service';
+import { TokenService } from '../../services/seguridad/token.service';
 
 @NgModule({
   declarations: [CursosComponent, AreasCursosComponent, PlataformasComponent, ProfesoresComponent, RutasComponent],
@@ -61,6 +62,6 @@ import { RutasService } from '../../services/cursos-online/rutas.service';
     MultiSelectModule,
     DataViewModule
   ],
-  providers: [PlataformasService, MessageService, AreaCursoService, ProfesoresService, CursosService, DatePipe, RutasService]
+  providers: [PlataformasService, MessageService, AreaCursoService, ProfesoresService, CursosService, DatePipe, RutasService, TokenService]
 })
 export class CursosOnlineModule { }

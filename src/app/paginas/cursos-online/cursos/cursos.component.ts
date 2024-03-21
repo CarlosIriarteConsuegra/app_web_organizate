@@ -10,6 +10,7 @@ import { ProfesoresService } from '../../../services/cursos-online/profesores.se
 import { AreaCursoDTO } from '../../../models/cursos/area_curso.dto';
 import { ProfesorDTO } from '../../../models/cursos/profesor.dto';
 import { DatePipe } from '@angular/common';
+import { TokenService } from '../../../services/seguridad/token.service';
 
 @Component({
     selector: 'app-cursos',
@@ -40,7 +41,8 @@ export class CursosComponent {
         private areaCursosService: AreaCursoService,
         private profesoresService: ProfesoresService,
         private messageService: MessageService,
-        public datePipe: DatePipe) {
+        public datePipe: DatePipe, 
+        public tokenService: TokenService) {
 
     }
 

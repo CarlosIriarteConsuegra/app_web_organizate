@@ -6,10 +6,10 @@
                 <ng-template pTemplate="left">
                     <div class="my-2">
                         <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2 p-2"
-                            (click)="openNew()"></button>
+                            (click)="openNew()" *ngIf="tokenService.isAdmin()"></button>
                         <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger p-2"
                             (click)="deleteSelectedCursos()" [disabled]="!selectedCursos || !selectedCursos.length"
-                            *ngIf="cursos && cursos.length > 0"></button>
+                            *ngIf="tokenService.isAdmin() && cursos && cursos.length > 0"></button>
                     </div>
                 </ng-template>
 
@@ -38,7 +38,7 @@
                     </ng-template>
                     <ng-template pTemplate="header" styleClass="p-1">
                         <tr>
-                            <th class="p-0 text-center">
+                            <th class="p-0 text-center" *ngIf="tokenService.isAdmin()">
                                 <p-tableHeaderCheckbox ></p-tableHeaderCheckbox>
                             </th>
                             <th class="text-center">Curso</th>
@@ -46,7 +46,7 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-curso>
                         <tr>
-                            <td>
+                            <td *ngIf="tokenService.isAdmin()">
                                 <p-tableCheckbox [value]="curso"></p-tableCheckbox>
                             </td>
                             <td>
@@ -88,7 +88,7 @@
                                             </div>
                                         </div>
                                         <div class="flex flex-column">
-                                            <div class="flex">
+                                            <div class="flex" *ngIf="tokenService.isAdmin()">
                                                 <button pButton pRipple icon="pi pi-pencil"
                                                     class="p-button-rounded p-button-success mr-2"
                                                     (click)="editCurso(curso)"></button>

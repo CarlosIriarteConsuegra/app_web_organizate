@@ -4,6 +4,7 @@ import { ProfesoresService } from '../../../services/cursos-online/profesores.se
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { DatePipe } from '@angular/common';
+import { TokenService } from '../../../services/seguridad/token.service';
 
 @Component({
     selector: 'app-profesores',
@@ -25,7 +26,8 @@ export class ProfesoresComponent {
     constructor(
         private profesoresService: ProfesoresService,
         private messageService: MessageService,
-        public datePipe: DatePipe) { }
+        public datePipe: DatePipe, 
+        public tokenService: TokenService) { }
 
     ngOnInit() {
         this.profesoresService.getProfesores().subscribe({

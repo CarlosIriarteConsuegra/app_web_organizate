@@ -4,6 +4,7 @@ import { Table } from 'primeng/table';
 import { PlataformaDTO } from '../../../models/cursos/plataforma.dto';
 import { PlataformasService } from '../../../services/cursos-online/plataformas.service';
 import { DatePipe } from '@angular/common';
+import { TokenService } from '../../../services/seguridad/token.service';
 
 @Component({
     selector: 'app-plataformas',
@@ -25,7 +26,8 @@ export class PlataformasComponent {
     constructor(
         private plataformasService: PlataformasService,
         private messageService: MessageService,
-        public datePipe: DatePipe) { }
+        public datePipe: DatePipe, 
+        public tokenService: TokenService) { }
 
     ngOnInit() {
         this.plataformasService.getPlataforms().subscribe({

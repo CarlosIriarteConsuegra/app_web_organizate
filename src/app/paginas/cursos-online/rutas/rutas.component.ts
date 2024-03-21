@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { CursoDTO } from '../../../models/cursos/curso.dto';
 import { CursosService } from '../../../services/cursos-online/cursos.service';
+import { TokenService } from '../../../services/seguridad/token.service';
 
 @Component({
     selector: 'app-rutas',
@@ -30,7 +31,8 @@ export class RutasComponent {
         private rutasService: RutasService,
         private messageService: MessageService,
         public datePipe: DatePipe,
-        private cursosService: CursosService) { }
+        private cursosService: CursosService, 
+        public tokenService: TokenService) { }
 
     ngOnInit() {
         this.rutasService.getRutas().subscribe({

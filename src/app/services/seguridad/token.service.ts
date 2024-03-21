@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class TokenService {
 
   constructor() {
@@ -25,5 +23,22 @@ export class TokenService {
 
   deslogger() : void {
     localStorage.clear();
+  }
+
+  isAdmin() {
+    if(!this.isLogged()){
+      return null;
+    }
+
+    const token = this.getToken();
+    const payload = token? token.split('.')[1] : "";
+    const values = atob(payload);
+    const valuesJson = JSON.parse(values);
+    const rol = valuesJson.rol;
+    if(rol == "ROLADM"){
+      return true;
+    }else{
+      return false;
+    }
   }
 }

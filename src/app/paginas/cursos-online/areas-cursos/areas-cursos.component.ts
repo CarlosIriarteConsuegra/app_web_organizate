@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { AreaCursoDTO } from '../../../models/cursos/area_curso.dto';
 import { Table } from 'primeng/table';
 import { DatePipe } from '@angular/common';
+import { TokenService } from '../../../services/seguridad/token.service';
 @Component({
   selector: 'app-areas-cursos',
   templateUrl: './areas-cursos.component.html',
@@ -24,7 +25,8 @@ export class AreasCursosComponent {
     constructor(
         private areaCursosService: AreaCursoService,
         private messageService: MessageService,
-        public datePipe: DatePipe) { }
+        public datePipe: DatePipe, 
+        public tokenService: TokenService) { }
 
     ngOnInit() {
         this.areaCursosService.getAreasCursos().subscribe({

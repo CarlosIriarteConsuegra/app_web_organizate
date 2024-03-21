@@ -6,11 +6,11 @@
                 <ng-template pTemplate="left">
                     <div class="my-2">
                         <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2 p-2"
-                            (click)="openNew()"></button>
+                            (click)="openNew()" *ngIf="tokenService.isAdmin()"></button>
                         <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger p-2"
                             (click)="deleteSelectedRutas()"
                             [disabled]="!selectedRutas || !selectedRutas.length"
-                            *ngIf="rutas && rutas.length > 0"></button>
+                            *ngIf="tokenService.isAdmin() && rutas && rutas.length > 0"></button>
                     </div>
                 </ng-template>
 
@@ -39,7 +39,7 @@
                     </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
-                            <th style="width: 3rem">
+                            <th style="width: 3rem" *ngIf="tokenService.isAdmin()">
                                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                             </th>
                             <th class="text-center">Ruta</th>
@@ -47,7 +47,7 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-ruta>
                         <tr>
-                            <td>
+                            <td *ngIf="tokenService.isAdmin()">
                                 <p-tableCheckbox [value]="ruta"></p-tableCheckbox>
                             </td>
                             <td style="width:100%; min-width:10rem;">
@@ -65,7 +65,7 @@
                                             </div>
                                         </div>
                                         <div class="flex flex-column">
-                                            <div class="flex">
+                                            <div class="flex" *ngIf="tokenService.isAdmin()">
                                                 <button pButton pRipple icon="pi pi-pencil"
                                                     class="p-button-rounded p-button-success mr-2"
                                                     (click)="editRuta(ruta)"></button>
