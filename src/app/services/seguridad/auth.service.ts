@@ -14,7 +14,6 @@ export class AuthService extends BaseService {
     super(http, configUrlService);
   }
 
-
   postLogin(usuario: UsuariosDTO) {
     return this.http.post<any>(`${environment.microproxy_seguridad}auth/login`, usuario);
   }

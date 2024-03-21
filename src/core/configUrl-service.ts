@@ -11,16 +11,16 @@ export class ConfigUrlService {
 
     constructor(private _http: HttpClient) { }
     load() {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             this._env = 'development';
             if (environment.production)
                 this._env = 'production';
             console.log(this._env);
-
-            this._http.get('assets/config/' + this._env + '.json').subscribe({
+            this._http.get('/assets/config/' + this._env + '.json').subscribe({
                 next: async (data) => {
                     this._config = data;
-                    console.log(this._config)
+                    environment.microproxy_cursos = this.getApi("microproxy_cursos");
+                    environment.microproxy_seguridad = this.getApi("microproxy_seguridad");
                     resolve(true);
                 },
                 error: async (error) => {

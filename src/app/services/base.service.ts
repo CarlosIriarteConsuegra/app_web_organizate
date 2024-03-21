@@ -5,8 +5,7 @@ import { TokenService } from "./seguridad/token.service";
 
 export class BaseService {
     constructor(protected http: HttpClient, configUrlService: ConfigUrlService, private tokenService?: TokenService) {
-      environment.microproxy_cursos = configUrlService.getApi("microproxy_cursos");
-      environment.microproxy_seguridad = configUrlService.getApi("microproxy_seguridad");
+      
     }
 
     getHeaderAuth() {
