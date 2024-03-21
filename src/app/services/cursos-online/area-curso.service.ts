@@ -2,30 +2,30 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../enviroments/environment';
 import { MessageService } from 'primeng/api';
-import { AreaCursoModel } from '../../models/cursos/area_curso.model';
+import { AreaCursoDTO } from '../../models/cursos/area_curso.dto';
 import { ConfigUrlService } from '../../../core/configUrl-service';
 import { BaseService } from '../base.service';
 
 @Injectable()
-export class AreaCursoService extends BaseService{
+export class AreaCursoService extends BaseService {
 
     constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService) { 
         super(http, configUrlService);
     }
 
     getAreasCursos() {
-        return this.http.get<AreaCursoModel[]>(`${environment.microproxy_cursos}area-curso`);
+        return this.http.get<AreaCursoDTO[]>(`${environment.microproxy_cursos}area-curso`);
     }
 
-    postAreaCursos(areaCursos: AreaCursoModel) {
-        return this.http.post<AreaCursoModel>(`${environment.microproxy_cursos}area-curso`, areaCursos);
+    postAreaCursos(areaCursos: AreaCursoDTO) {
+        return this.http.post<AreaCursoDTO>(`${environment.microproxy_cursos}area-curso`, areaCursos);
     }
 
-    putAreaCursos(areaCursos: AreaCursoModel) {
-        return this.http.put<AreaCursoModel>(`${environment.microproxy_cursos}area-curso`, areaCursos);
+    putAreaCursos(areaCursos: AreaCursoDTO) {
+        return this.http.put<AreaCursoDTO>(`${environment.microproxy_cursos}area-curso`, areaCursos);
     }
 
-    deleteAreasCursos(areasCursos: AreaCursoModel[]): AreaCursoModel[] {
+    deleteAreasCursos(areasCursos: AreaCursoDTO[]): AreaCursoDTO[] {
         for (let areaCursos of areasCursos) {
             if (areaCursos.cursos && areaCursos.cursos.length > 0) {
                 this.messageService.add({ severity: 'error', summary: 'Area de cursos con cursos', detail: `El area de cursos ${areaCursos.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
@@ -53,7 +53,7 @@ export class AreaCursoService extends BaseService{
         return areasCursos;
     }
 
-    deleteAreaCursos(areaCursos: AreaCursoModel) {
+    deleteAreaCursos(areaCursos: AreaCursoDTO) {
         if (areaCursos.cursos && areaCursos.cursos.length > 0) {
             this.messageService.add({ severity: 'error', summary: 'Area de cursos con cursos', detail: `El area de cursos ${areaCursos.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
         } else {

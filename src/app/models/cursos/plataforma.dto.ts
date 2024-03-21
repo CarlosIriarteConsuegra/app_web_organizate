@@ -1,7 +1,7 @@
-import { CursoModel } from "./curso.model";
+import { CursoDTO } from "./curso.dto";
 import { Nullable } from "primeng/ts-helpers";
 
-export class PlataformaModel {
+export class PlataformaDTO {
     id?:number;
     codigo?: string;
     nombre?: string;
@@ -11,5 +11,5 @@ export class PlataformaModel {
     createdAt?: Date | Nullable;
     updateAt?: Date | Nullable;
     deletedAt?: Date | Nullable;
-    cursosPlataforma?: CursoModel[] = [];
+    cursosPlataforma?: CursoDTO[] = [];
 }

@@ -1,6 +1,6 @@
-import { CursoModel } from "./curso.model";
+import { CursoDTO } from "./curso.dto";
 
-export class ProfesorModel {
+export class ProfesorDTO {
     id?: number;
     codigo?: string;
     nombre?: string;
@@ -14,5 +14,5 @@ export class ProfesorModel {
     createdAt?: Date;
     updateAt?: Date;
     deletedAt?: Date;
-    cursos?: CursoModel[];
+    cursos?: CursoDTO[];
 }

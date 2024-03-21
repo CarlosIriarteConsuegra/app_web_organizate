@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RutaModel } from '../../models/cursos/ruta.model';
+import { RutaDTO } from '../../models/cursos/ruta.dto';
 import { environment } from '../../../enviroments/environment';
 import { MessageService } from 'primeng/api';
 import { BaseService } from '../base.service';
@@ -14,18 +14,18 @@ export class RutasService extends BaseService {
     }
 
     getRutas() {
-        return this.http.get<RutaModel[]>(`${environment.microproxy_cursos}rutas`);
+        return this.http.get<RutaDTO[]>(`${environment.microproxy_cursos}rutas`);
     }
 
-    postRuta(ruta: RutaModel) {
-        return this.http.post<RutaModel>(`${environment.microproxy_cursos}rutas`, ruta);
+    postRuta(ruta: RutaDTO) {
+        return this.http.post<RutaDTO>(`${environment.microproxy_cursos}rutas`, ruta);
     }
 
-    putRuta(ruta: RutaModel) {
-        return this.http.put<RutaModel>(`${environment.microproxy_cursos}rutas`, ruta);
+    putRuta(ruta: RutaDTO) {
+        return this.http.put<RutaDTO>(`${environment.microproxy_cursos}rutas`, ruta);
     }
 
-    deleteRutas(rutas: RutaModel[]) {
+    deleteRutas(rutas: RutaDTO[]) {
         for (let ruta of rutas) {
             const httpOptions = {
                 headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -47,7 +47,7 @@ export class RutasService extends BaseService {
         return rutas;
     }
 
-    deleteRuta(ruta: RutaModel) {
+    deleteRuta(ruta: RutaDTO) {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
             body: ruta

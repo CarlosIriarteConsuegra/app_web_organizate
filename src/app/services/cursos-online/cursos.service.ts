@@ -1,31 +1,31 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CursoModel } from '../../models/cursos/curso.model';
+import { CursoDTO } from '../../models/cursos/curso.dto';
 import { environment } from '../../../enviroments/environment';
 import { MessageService } from 'primeng/api';
 import { ConfigUrlService } from '../../../core/configUrl-service';
 import { BaseService } from '../base.service';
 
 @Injectable()
-export class CursosService extends BaseService{
+export class CursosService extends BaseService {
 
     constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService) { 
         super(http, configUrlService);
     }
 
     getCursos() {
-        return this.http.get<CursoModel[]>(`${environment.microproxy_cursos}cursos`);
+        return this.http.get<CursoDTO[]>(`${environment.microproxy_cursos}cursos`);
     }
 
-    postCurso(curso: CursoModel) {
-        return this.http.post<CursoModel>(`${environment.microproxy_cursos}cursos`, curso);
+    postCurso(curso: CursoDTO) {
+        return this.http.post<CursoDTO>(`${environment.microproxy_cursos}cursos`, curso);
     }
 
-    putCurso(curso: CursoModel) {
-        return this.http.put<CursoModel>(`${environment.microproxy_cursos}cursos`, curso);
+    putCurso(curso: CursoDTO) {
+        return this.http.put<CursoDTO>(`${environment.microproxy_cursos}cursos`, curso);
     }
 
-    deleteCursos(cursos: CursoModel[]) {
+    deleteCursos(cursos: CursoDTO[]) {
         for (let curso of cursos) {
             if (curso.rutas && curso.rutas.length > 0) {
                 this.messageService.add({ severity: 'error', summary: 'Curso en rutas', detail: `El curso ${curso.nombre} pertenece a rutas de aprendizaje`, life: 3000 });
@@ -53,7 +53,7 @@ export class CursosService extends BaseService{
         return cursos;
     }
 
-    deleteCurso(curso: CursoModel) {
+    deleteCurso(curso: CursoDTO) {
         if (curso.rutas && curso.rutas.length > 0) {
             this.messageService.add({ severity: 'error', summary: 'Curso en rutas', detail: `El curso ${curso.nombre} pertenece a rutas de aprendizaje`, life: 3000 });
         } else {

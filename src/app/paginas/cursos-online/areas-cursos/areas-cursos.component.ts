@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AreaCursoService } from '../../../services/cursos-online/area-curso.service';
 import { MessageService } from 'primeng/api';
-import { AreaCursoModel } from '../../../models/cursos/area_curso.model';
+import { AreaCursoDTO } from '../../../models/cursos/area_curso.dto';
 import { Table } from 'primeng/table';
 import { DatePipe } from '@angular/common';
 @Component({
@@ -10,10 +10,10 @@ import { DatePipe } from '@angular/common';
   styleUrl: './areas-cursos.component.scss'
 })
 export class AreasCursosComponent {
-    areasCursos: AreaCursoModel[] = [];
-    areasCursosEdit: AreaCursoModel[] = [];
-    areaCursos: AreaCursoModel = {};
-    selectedAreasCursos: AreaCursoModel[] = [];
+    areasCursos: AreaCursoDTO[] = [];
+    areasCursosEdit: AreaCursoDTO[] = [];
+    areaCursos: AreaCursoDTO = {};
+    selectedAreasCursos: AreaCursoDTO[] = [];
     areaCursosDialog: boolean = false;
     deleteAreaCursosDialog: boolean = false;
     deleteAreasCursosDialog: boolean = false;
@@ -55,12 +55,12 @@ export class AreasCursosComponent {
         this.deleteAreasCursosDialog = true;
     }
 
-    editAreaCursos(areaCurso: AreaCursoModel) {
+    editAreaCursos(areaCurso: AreaCursoDTO) {
         this.areaCursos = { ...areaCurso };
         this.areaCursosDialog = true;
     }
 
-    deleteAreaCursos(areaCurso: AreaCursoModel) {
+    deleteAreaCursos(areaCurso: AreaCursoDTO) {
         this.deleteAreaCursosDialog = true;
         this.areaCursos = { ...areaCurso };
         this.selectedAreasCursos.push(this.areaCursos);

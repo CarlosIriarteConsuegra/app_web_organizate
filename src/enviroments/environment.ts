@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
 
-  microproxy_cursos: "http://localhost:11001/"
+  microproxy_cursos: "http://localhost:11001/",
+  microproxy_seguridad: "http://localhost:11002/"
 };
 
 /*

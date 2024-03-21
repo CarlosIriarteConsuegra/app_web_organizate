@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Table } from 'primeng/table';
-import { RutaModel } from '../../../models/cursos/ruta.model';
+import { RutaDTO } from '../../../models/cursos/ruta.dto';
 import { RutasService } from '../../../services/cursos-online/rutas.service';
 import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
-import { CursoModel } from '../../../models/cursos/curso.model';
+import { CursoDTO } from '../../../models/cursos/curso.dto';
 import { CursosService } from '../../../services/cursos-online/cursos.service';
 
 @Component({
@@ -13,18 +13,18 @@ import { CursosService } from '../../../services/cursos-online/cursos.service';
     styleUrl: './rutas.component.scss'
 })
 export class RutasComponent {
-    rutas: RutaModel[] = [];
-    rutasEdit: RutaModel[] = [];
-    ruta: RutaModel = {};
-    selectedRutas: RutaModel[] = [];
+    rutas: RutaDTO[] = [];
+    rutasEdit: RutaDTO[] = [];
+    ruta: RutaDTO = {};
+    selectedRutas: RutaDTO[] = [];
     rutaDialog: boolean = false;
     deleteRutaDialog: boolean = false;
     deleteRutasDialog: boolean = false;
     submitted: boolean = false;
     cols: any[] = [];
     rowsPerPageOptions = [5, 10, 20];
-    cursos: CursoModel[] = [];
-    selectedCursos: CursoModel[] = [];
+    cursos: CursoDTO[] = [];
+    selectedCursos: CursoDTO[] = [];
 
     constructor(
         private rutasService: RutasService,
@@ -85,13 +85,13 @@ export class RutasComponent {
         this.deleteRutasDialog = true;
     }
 
-    editRuta(ruta: RutaModel) {
+    editRuta(ruta: RutaDTO) {
         this.selectedCursos = ruta.cursos ? ruta.cursos : [];
         this.ruta = { ...ruta };
         this.rutaDialog = true;
     }
 
-    deleteRuta(ruta: RutaModel) {
+    deleteRuta(ruta: RutaDTO) {
         this.deleteRutaDialog = true;
         this.ruta = { ...ruta };
         this.selectedRutas.push(this.ruta);

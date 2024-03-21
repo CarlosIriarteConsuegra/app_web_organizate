@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { CursoModel } from '../../../models/cursos/curso.model';
+import { CursoDTO } from '../../../models/cursos/curso.dto';
 import { CursosService } from '../../../services/cursos-online/cursos.service';
-import { PlataformaModel } from '../../../models/cursos/plataforma.model';
+import { PlataformaDTO } from '../../../models/cursos/plataforma.dto';
 import { PlataformasService } from '../../../services/cursos-online/plataformas.service';
 import { AreaCursoService } from '../../../services/cursos-online/area-curso.service';
 import { ProfesoresService } from '../../../services/cursos-online/profesores.service';
-import { AreaCursoModel } from '../../../models/cursos/area_curso.model';
-import { ProfesorModel } from '../../../models/cursos/profesor.model';
+import { AreaCursoDTO } from '../../../models/cursos/area_curso.dto';
+import { ProfesorDTO } from '../../../models/cursos/profesor.dto';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -17,10 +17,10 @@ import { DatePipe } from '@angular/common';
     styleUrl: './cursos.component.scss'
 })
 export class CursosComponent {
-    cursos: CursoModel[] = [];
-    cursosEdit: CursoModel[] = [];
-    curso: CursoModel = {};
-    selectedCursos: CursoModel[] = [];
+    cursos: CursoDTO[] = [];
+    cursosEdit: CursoDTO[] = [];
+    curso: CursoDTO = {};
+    selectedCursos: CursoDTO[] = [];
     cursoDialog: boolean = false;
     deleteCursoDialog: boolean = false;
     deleteCursosDialog: boolean = false;
@@ -28,11 +28,11 @@ export class CursosComponent {
     cols!: any[];
     rowsPerPageOptions = [5, 10, 20];
     plataformas: any[] = [];
-    selectdPlataforma: PlataformaModel | undefined = {};
+    selectdPlataforma: PlataformaDTO | undefined = {};
     areasCursos: any[] = [];
-    selectdAreasCursos: AreaCursoModel[] | undefined = [];
-    profesores: ProfesorModel[] = [];
-    selectedProfesores: ProfesorModel[] = [];
+    selectdAreasCursos: AreaCursoDTO[] | undefined = [];
+    profesores: ProfesorDTO[] = [];
+    selectedProfesores: ProfesorDTO[] = [];
 
     constructor(
         private cursosService: CursosService,
@@ -140,7 +140,7 @@ export class CursosComponent {
         this.deleteCursosDialog = true;
     }
 
-    editCurso(curso: CursoModel) {
+    editCurso(curso: CursoDTO) {
         this.curso = { ...curso };
         this.selectdPlataforma = this.curso.plataforma ? this.curso.plataforma : {};
         this.selectdAreasCursos = this.curso.areascurso ? this.curso.areascurso : [];
@@ -149,7 +149,7 @@ export class CursosComponent {
         this.cursoDialog = true;
     }
 
-    deleteCurso(curso: CursoModel) {
+    deleteCurso(curso: CursoDTO) {
         this.deleteCursoDialog = true;
         this.curso = { ...curso };
         this.selectedCursos.push(this.curso);

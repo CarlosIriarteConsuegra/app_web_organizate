@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PlataformaModel } from '../../models/cursos/plataforma.model';
+import { PlataformaDTO } from '../../models/cursos/plataforma.dto';
 import { environment } from '../../../enviroments/environment';
 import { MessageService } from 'primeng/api';
 import { ConfigUrlService } from '../../../core/configUrl-service';
@@ -14,18 +14,18 @@ export class PlataformasService extends BaseService{
     }
 
     getPlataforms() {
-        return this.http.get<PlataformaModel[]>(`${environment.microproxy_cursos}plataformas`);
+        return this.http.get<PlataformaDTO[]>(`${environment.microproxy_cursos}plataformas`);
     }
 
-    postPlataform(plataform: PlataformaModel) {
-        return this.http.post<PlataformaModel>(`${environment.microproxy_cursos}plataformas`, plataform);
+    postPlataform(plataform: PlataformaDTO) {
+        return this.http.post<PlataformaDTO>(`${environment.microproxy_cursos}plataformas`, plataform);
     }
 
-    putPlataform(plataform: PlataformaModel) {
-        return this.http.put<PlataformaModel>(`${environment.microproxy_cursos}plataformas`, plataform);
+    putPlataform(plataform: PlataformaDTO) {
+        return this.http.put<PlataformaDTO>(`${environment.microproxy_cursos}plataformas`, plataform);
     }
 
-    deletePlataforms(plataforms: PlataformaModel[]) {
+    deletePlataforms(plataforms: PlataformaDTO[]) {
         for (let plataform of plataforms) {
             if (plataform.cursosPlataforma && plataform.cursosPlataforma.length > 0) {
                 this.messageService.add({ severity: 'error', summary: 'Plataforma con cursos', detail: `La plataforma ${plataform.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
@@ -53,7 +53,7 @@ export class PlataformasService extends BaseService{
         return plataforms;
     }
 
-    deletePlataform(plataform: PlataformaModel) {
+    deletePlataform(plataform: PlataformaDTO) {
         if (plataform.cursosPlataforma && plataform.cursosPlataforma.length > 0) {
             this.messageService.add({ severity: 'error', summary: 'Plataforma con cursos', detail: `La plataforma ${plataform.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
         } else {

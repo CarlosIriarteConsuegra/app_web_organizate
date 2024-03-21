@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../enviroments/environment';
 import { MessageService } from 'primeng/api';
-import { ProfesorModel } from '../../models/cursos/profesor.model';
+import { ProfesorDTO } from '../../models/cursos/profesor.dto';
 import { BaseService } from '../base.service';
 import { ConfigUrlService } from '../../../core/configUrl-service';
 
@@ -14,18 +14,18 @@ export class ProfesoresService extends BaseService {
     }
 
     getProfesores() {
-        return this.http.get<ProfesorModel[]>(`${environment.microproxy_cursos}profesores`);
+        return this.http.get<ProfesorDTO[]>(`${environment.microproxy_cursos}profesores`);
     }
 
-    postProfesor(profesor: ProfesorModel) {
-        return this.http.post<ProfesorModel>(`${environment.microproxy_cursos}profesores`, profesor);
+    postProfesor(profesor: ProfesorDTO) {
+        return this.http.post<ProfesorDTO>(`${environment.microproxy_cursos}profesores`, profesor);
     }
 
-    putProfesor(profesor: ProfesorModel) {
-        return this.http.put<ProfesorModel>(`${environment.microproxy_cursos}profesores`, profesor);
+    putProfesor(profesor: ProfesorDTO) {
+        return this.http.put<ProfesorDTO>(`${environment.microproxy_cursos}profesores`, profesor);
     }
 
-    deleteProfesores(profesores: ProfesorModel[]): ProfesorModel[] {
+    deleteProfesores(profesores: ProfesorDTO[]): ProfesorDTO[] {
         for (let profesor of profesores) {
             if (profesor.cursos && profesor.cursos.length > 0) {
                 this.messageService.add({ severity: 'error', summary: 'Profesor con cursos', detail: `El profesor ${profesor.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
@@ -53,7 +53,7 @@ export class ProfesoresService extends BaseService {
         return profesores;
     }
 
-    deleteProfesor(profesor: ProfesorModel) {
+    deleteProfesor(profesor: ProfesorDTO) {
         if (profesor.cursos && profesor.cursos.length > 0) {
             this.messageService.add({ severity: 'error', summary: 'Profesor con cursos', detail: `El profesor ${profesor.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
         } else {

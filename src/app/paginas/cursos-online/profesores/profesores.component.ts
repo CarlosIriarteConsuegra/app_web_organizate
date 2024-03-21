@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ProfesorModel } from '../../../models/cursos/profesor.model';
+import { ProfesorDTO } from '../../../models/cursos/profesor.dto';
 import { ProfesoresService } from '../../../services/cursos-online/profesores.service';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -11,10 +11,10 @@ import { DatePipe } from '@angular/common';
     styleUrl: './profesores.component.scss'
 })
 export class ProfesoresComponent {
-    profesores: ProfesorModel[] = [];
-    profesoresEdit: ProfesorModel[] = [];
-    profesor: ProfesorModel = {};
-    selectedProfesores: ProfesorModel[] = [];
+    profesores: ProfesorDTO[] = [];
+    profesoresEdit: ProfesorDTO[] = [];
+    profesor: ProfesorDTO = {};
+    selectedProfesores: ProfesorDTO[] = [];
     profesorDialog: boolean = false;
     deleteProfesorDialog: boolean = false;
     deleteProfesoresDialog: boolean = false;
@@ -56,12 +56,12 @@ export class ProfesoresComponent {
         this.deleteProfesoresDialog = true;
     }
 
-    editProfesor(profesor: ProfesorModel) {
+    editProfesor(profesor: ProfesorDTO) {
         this.profesor = { ...profesor };
         this.profesorDialog = true;
     }
 
-    deleteProfesor(profesor: ProfesorModel) {
+    deleteProfesor(profesor: ProfesorDTO) {
         this.deleteProfesorDialog = true;
         this.profesor = { ...profesor };
         this.selectedProfesores.push(this.profesor);

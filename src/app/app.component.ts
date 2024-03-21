@@ -1,15 +1,17 @@
-import { Component, OnDestroy, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { AppTopBarComponent } from './components/app-topbar/app-topbar.component';
 import { filter, Subscription } from 'rxjs';
 import { LayoutService } from './services/app-layout.service';
 import { AppSidebarComponent } from './components/app-sidebar/app-sidebar.component';
+import { TokenService } from './services/seguridad/token.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnDestroy, OnInit {
+    isLogged?: boolean;
   title = 'Organizate';
   overlayMenuOpenSubscription: Subscription;
 
@@ -21,7 +23,7 @@ export class AppComponent implements OnDestroy {
 
     @ViewChild(AppTopBarComponent) appTopbar!: AppTopBarComponent;
 
-    constructor(public layoutService: LayoutService, public renderer: Renderer2, public router: Router) {
+    constructor(public layoutService: LayoutService, public renderer: Renderer2, public router: Router, private tokenService: TokenService) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
@@ -55,6 +57,10 @@ export class AppComponent implements OnDestroy {
                 this.hideMenu();
                 this.hideProfileMenu();
             });
+    }
+
+    ngOnInit(): void {
+        this.isLogged = this.tokenService.isLogged() ? true : false;
     }
 
     hideMenu() {

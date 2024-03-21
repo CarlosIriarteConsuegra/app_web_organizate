@@ -1,6 +1,6 @@
-import { CursoModel } from "./curso.model";
+import { CursoDTO } from "./curso.dto";
 
-export class RutaModel {
+export class RutaDTO {
     id?: number;
     codigo?: string;
     nombre?: string;
@@ -8,5 +8,5 @@ export class RutaModel {
     createdAt?: Date;
     updateAt?: Date;
     deletedAt?: Date;
-    cursos?: CursoModel[];
+    cursos?: CursoDTO[];
 }

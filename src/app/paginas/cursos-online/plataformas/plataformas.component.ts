@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { PlataformaModel } from '../../../models/cursos/plataforma.model';
+import { PlataformaDTO } from '../../../models/cursos/plataforma.dto';
 import { PlataformasService } from '../../../services/cursos-online/plataformas.service';
 import { DatePipe } from '@angular/common';
 
@@ -11,10 +11,10 @@ import { DatePipe } from '@angular/common';
     styleUrl: './plataformas.component.scss'
 })
 export class PlataformasComponent {
-    plataformas: PlataformaModel[] = [];
-    plataformasEdit: PlataformaModel[] = [];
-    plataforma: PlataformaModel = {};
-    selectedPlataformas: PlataformaModel[] = [];
+    plataformas: PlataformaDTO[] = [];
+    plataformasEdit: PlataformaDTO[] = [];
+    plataforma: PlataformaDTO = {};
+    selectedPlataformas: PlataformaDTO[] = [];
     plataformaDialog: boolean = false;
     deletePlataformaDialog: boolean = false;
     deletePlataformasDialog: boolean = false;
@@ -63,12 +63,12 @@ export class PlataformasComponent {
         this.deletePlataformasDialog = true;
     }
 
-    editPlataforma(plataforma: PlataformaModel) {
+    editPlataforma(plataforma: PlataformaDTO) {
         this.plataforma = { ...plataforma };
         this.plataformaDialog = true;
     }
 
-    deletePlataforma(plataforma: PlataformaModel) {
+    deletePlataforma(plataforma: PlataformaDTO) {
         this.deletePlataformaDialog = true;
         this.plataforma = { ...plataforma };
         this.selectedPlataformas.push(this.plataforma);
