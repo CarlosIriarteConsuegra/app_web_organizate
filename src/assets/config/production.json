@@ -1,5 +1,6 @@
 {
     "API_ENDPOINTS": {
-        "microproxy_cursos": "https://microproxycourses-production.up.railway.app/"
+        "microproxy_cursos": "https://microproxycourses-production.up.railway.app/",
+        "microproxy_seguridad": "https://microproxyseguridad-production.up.railway.app/"
     }
 }
