@@ -24,14 +24,18 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { LayoutComponent } from './components/layout/layout.component';
 import { interceptorProvider } from './interceptors/token.interceptor';
+import { LoadingSpinnerComponent } from './components/loadingWindow/loading.component';
 
 @NgModule({
-    declarations: [AppComponent, LayoutComponent, AppTopBarComponent, AppSidebarComponent, AppMenuComponent, AppMenuitemComponent, NotfoundComponent, AppFooterComponent, InicioComponent, LoginComponent],
-    imports: [BrowserModule, BrowserAnimationsModule, CommonModule, AppRoutingModule, HttpClientModule, CheckboxModule, ToastModule, FormsModule,
+    declarations: [AppComponent, LayoutComponent, AppTopBarComponent, AppSidebarComponent,
+        AppMenuComponent, AppMenuitemComponent, NotfoundComponent, AppFooterComponent, InicioComponent,
+        LoginComponent, LoadingSpinnerComponent],
+    imports: [BrowserModule, BrowserAnimationsModule, CommonModule, AppRoutingModule, HttpClientModule,
+        CheckboxModule, ToastModule, FormsModule,
         ReactiveFormsModule, InputTextModule, ButtonModule,],
-    providers: [ 
+    providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
-        ConfigUrlService, 
+        ConfigUrlService,
         ConfigUrlModule.init(),
         AuthService,
         TokenService,

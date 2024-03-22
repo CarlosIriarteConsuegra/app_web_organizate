@@ -5,6 +5,7 @@ import { AreaCursoDTO } from '../../../models/cursos/area_curso.dto';
 import { Table } from 'primeng/table';
 import { DatePipe } from '@angular/common';
 import { TokenService } from '../../../services/seguridad/token.service';
+import { LoadingService } from '../../../components/loadingWindow/loading.service';
 @Component({
   selector: 'app-areas-cursos',
   templateUrl: './areas-cursos.component.html',
@@ -26,9 +27,11 @@ export class AreasCursosComponent {
         private areaCursosService: AreaCursoService,
         private messageService: MessageService,
         public datePipe: DatePipe, 
-        public tokenService: TokenService) { }
+        public tokenService: TokenService,
+        private loadingService: LoadingService) { }
 
     ngOnInit() {
+        this.loadingService.ejecutarLoading("Cargando areas de cursos...");
         this.areaCursosService.getAreasCursos().subscribe({
             next: async (data) => {
                 if(data.length > 0){
@@ -36,11 +39,15 @@ export class AreasCursosComponent {
                 }else{
                     this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes areas de cursos registradas", life: 3000 });
                 }
+                this.loadingService.finalizarLoading();
             },
             error: (error) => {
                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                this.loadingService.finalizarLoading();
             }
         })
+
+        
 
         this.cols = [
             { field: 'areaCurso', header: 'Area de Cursos' },
@@ -69,6 +76,7 @@ export class AreasCursosComponent {
     }
 
     async confirmDeleteSelected() {
+        this.loadingService.ejecutarLoading("Eliminando areas de cursos");
         this.deleteAreasCursosDialog = false;
         this.selectedAreasCursos = this.areaCursosService.deleteAreasCursos(this.selectedAreasCursos);
         this.areasCursos = this.areasCursos.filter(val => !this.selectedAreasCursos.includes(val));
@@ -92,11 +100,12 @@ export class AreasCursosComponent {
         this.areasCursosEdit = this.areasCursos;
         if (this.areaCursos.codigo?.trim() && this.areaCursos.nombre?.trim()) {
             if (this.areaCursos.id) {
-
+                this.loadingService.ejecutarLoading("Actualizado area de cursos");
                 this.areaCursosService.putAreaCursos(this.areaCursos).subscribe({
                     next: async (data) => {
                         this.areasCursosEdit[this.findIndexById(this.areaCursos.codigo)] = await this.areaCursos;
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Area de cursos Actualizada', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         if(typeof error.error.statusMessage == "string"){
@@ -106,14 +115,17 @@ export class AreasCursosComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             } else {
+                this.loadingService.ejecutarLoading("Guardando area de cursos");
                 this.areaCursosService.postAreaCursos(this.areaCursos).subscribe({
                     next: async (data) => {
                         data.cursos = [];
                         this.areasCursosEdit.push(data);
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Area de cursos Creada', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         if(typeof error.error.statusMessage == "string"){
@@ -123,6 +135,7 @@ export class AreasCursosComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             }

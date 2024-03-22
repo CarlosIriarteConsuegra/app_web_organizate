@@ -5,6 +5,7 @@ import { UsuarioService } from '../../../services/seguridad/usuario.service';
 import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { TokenService } from '../../../services/seguridad/token.service';
+import { LoadingService } from '../../../components/loadingWindow/loading.service';
 
 @Component({
     selector: 'app-usuario',
@@ -27,9 +28,11 @@ export class UsuarioComponent {
         private usuarioService: UsuarioService,
         private messageService: MessageService,
         public datePipe: DatePipe,
-        public tokenService: TokenService) { }
+        public tokenService: TokenService,
+        private loadingService: LoadingService) { }
 
     ngOnInit() {
+        this.loadingService.ejecutarLoading("Cargando usuarios...");
         this.usuarioService.getUsuarios().subscribe({
             next: async (data) => {
                 if (data.length > 0) {
@@ -40,9 +43,11 @@ export class UsuarioComponent {
                 } else {
                     this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes usuarios registrados", life: 3000 });
                 }
+                this.loadingService.finalizarLoading();
             },
             error: (error) => {
                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                this.loadingService.finalizarLoading();
             }
         })
 
@@ -97,11 +102,13 @@ export class UsuarioComponent {
 
         if (this.usuario.codigo?.trim() && this.usuario.nombre?.trim()) {
             if (this.usuario.id) {
+                this.loadingService.ejecutarLoading("Actualizando usuario...");
                 this.usuarioService.putActualizarUsuario(this.usuario).subscribe({
                     next: async (data) => {
                         this.usuario.pass = undefined;
                         this.usuariosEdit[this.findIndexById(this.usuario.codigo)] = await this.usuario;
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Usuario Actualizado', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         this.usuario.pass = undefined;
@@ -112,15 +119,18 @@ export class UsuarioComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             } else {
+                this.loadingService.ejecutarLoading("Guadando usuario...");
                 this.usuario.rol = { id: 0 };
                 this.usuarioService.postRegistrarUsuario(this.usuario).subscribe({
                     next: async (data) => {
                         this.usuario.pass = undefined;
                         this.usuariosEdit.push(data);
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Usuario Creado', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         this.usuario.pass = undefined;
@@ -131,6 +141,7 @@ export class UsuarioComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             }

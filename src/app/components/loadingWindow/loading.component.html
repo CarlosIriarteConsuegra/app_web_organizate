@@ -1,0 +1,6 @@
+<div *ngIf="loadingService.show" class="loading-spinner-overlay">
+  <div class="loading-spinner">
+    <div class="spinner-icon" style="margin: auto;"></div>
+    <div class="loading-message" *ngIf="loadingService.message">{{ loadingService.message }}</div>
+  </div>
+</div>

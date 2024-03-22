@@ -5,13 +5,15 @@ import { MessageService } from 'primeng/api';
 import { ConfigUrlService } from '../../../core/configUrl-service';
 import { environment } from '../../../enviroments/environment';
 import { UsuariosDTO } from '../../models/seguridad/usuarios.dto';
+import { LoadingService } from '../../components/loadingWindow/loading.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService extends BaseService {
 
-  constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService) {
+  constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService,
+    private loadingService: LoadingService) {
     super(http, configUrlService);
   }
 
@@ -33,6 +35,7 @@ export class UsuarioService extends BaseService {
 
   eliminarUsuarios(usuarios: UsuariosDTO[]) {
     for (let usuario of usuarios) {
+      this.loadingService.ejecutarLoading("Eliminando usuarios...");
       const httpOptions = {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
         body: usuario
@@ -41,10 +44,12 @@ export class UsuarioService extends BaseService {
       this.http.delete<any>(`${environment.microproxy_cursos}usuarios`, httpOptions).subscribe({
         next: async (data) => {
           this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: `Usuario ${usuario.nombre} eliminado`, life: 3000 });
+          this.loadingService.finalizarLoading();
         },
         error: (error) => {
           usuarios = usuarios.filter(user => user.id != usuario.id);
           this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+          this.loadingService.finalizarLoading();
         }
       })
 
@@ -54,6 +59,7 @@ export class UsuarioService extends BaseService {
   }
 
   deleteEliminarUsuario(usuario: UsuariosDTO) {
+    this.loadingService.ejecutarLoading("Eliminando usuario...");
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       body: usuario
@@ -61,9 +67,11 @@ export class UsuarioService extends BaseService {
     this.http.delete<any>(`${environment.microproxy_seguridad}usuarios`, httpOptions).subscribe({
       next: async (data) => {
         this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: `Usuario ${usuario.nombre} eliminado`, life: 3000 });
+        this.loadingService.finalizarLoading();
       },
       error: (error) => {
         this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+        this.loadingService.finalizarLoading();
       }
     })
   }

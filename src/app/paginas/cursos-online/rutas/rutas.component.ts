@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { CursoDTO } from '../../../models/cursos/curso.dto';
 import { CursosService } from '../../../services/cursos-online/cursos.service';
 import { TokenService } from '../../../services/seguridad/token.service';
+import { LoadingService } from '../../../components/loadingWindow/loading.service';
 
 @Component({
     selector: 'app-rutas',
@@ -32,9 +33,13 @@ export class RutasComponent {
         private messageService: MessageService,
         public datePipe: DatePipe,
         private cursosService: CursosService, 
-        public tokenService: TokenService) { }
+        public tokenService: TokenService,
+        private loadingService: LoadingService) { }
 
     ngOnInit() {
+        let rutasCargadas = false;
+        let cursosCargados = false;
+        this.loadingService.ejecutarLoading("Cargando rutas...");
         this.rutasService.getRutas().subscribe({
             next: async (data) => {
                 if (data.length > 0) {
@@ -42,9 +47,17 @@ export class RutasComponent {
                 } else {
                     this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes rutas registradas", life: 3000 });
                 }
+                rutasCargadas = true;
+                if(rutasCargadas && cursosCargados){
+                    this.loadingService.finalizarLoading();
+                }
             },
             error: (error) => {
                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                rutasCargadas = true;
+                if(rutasCargadas && cursosCargados){
+                    this.loadingService.finalizarLoading();
+                }
             }
         })
 
@@ -61,9 +74,17 @@ export class RutasComponent {
                 } else {
                     this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes cursos registradas", life: 3000 });
                 }
+                cursosCargados = true;
+                if(rutasCargadas && cursosCargados){
+                    this.loadingService.finalizarLoading();
+                }
             },
             error: (error) => {
                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                cursosCargados = true;
+                if(rutasCargadas && cursosCargados){
+                    this.loadingService.finalizarLoading();
+                }
             }
         })
 
@@ -125,10 +146,12 @@ export class RutasComponent {
         console.log(this.ruta);
         if (this.ruta.codigo?.trim() && this.ruta.nombre?.trim() && this.ruta.descripcion?.trim()) {
             if (this.ruta.id) {
+                this.loadingService.ejecutarLoading("Actualizando ruta...");
                 this.rutasService.putRuta(this.ruta).subscribe({
                     next: async (data) => {
                         this.rutasEdit[this.findIndexById(this.ruta.codigo)] = this.ruta;
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Ruta Actualizada', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         if (typeof error.error.statusMessage == "string") {
@@ -138,13 +161,16 @@ export class RutasComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             } else {
+                this.loadingService.ejecutarLoading("Guardando ruta...");
                 this.rutasService.postRuta(this.ruta).subscribe({
                     next: async (data) => {
                         this.rutasEdit.push(data);
                         this.messageService.add({ severity: 'success', summary: 'Exitosa', detail: 'Ruta Creada', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         if (typeof error.error.statusMessage == "string") {
@@ -154,6 +180,7 @@ export class RutasComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             }

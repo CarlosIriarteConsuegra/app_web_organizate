@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { DatePipe } from '@angular/common';
 import { TokenService } from '../../../services/seguridad/token.service';
+import { LoadingService } from '../../../components/loadingWindow/loading.service';
 
 @Component({
     selector: 'app-profesores',
@@ -27,9 +28,11 @@ export class ProfesoresComponent {
         private profesoresService: ProfesoresService,
         private messageService: MessageService,
         public datePipe: DatePipe, 
-        public tokenService: TokenService) { }
+        public tokenService: TokenService,
+        private loadingService: LoadingService) { }
 
     ngOnInit() {
+        this.loadingService.ejecutarLoading("Cargando profesores...");
         this.profesoresService.getProfesores().subscribe({
             next: async (data) => {
                 if(data.length > 0){
@@ -37,9 +40,11 @@ export class ProfesoresComponent {
                 }else{
                     this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes profesores registrados", life: 3000 });
                 }
+                this.loadingService.finalizarLoading();
             },
             error: (error) => {
                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                this.loadingService.finalizarLoading();
             }
         })
 
@@ -94,11 +99,12 @@ export class ProfesoresComponent {
 
         if (this.profesor.codigo?.trim() && this.profesor.nombre?.trim()) {
             if (this.profesor.id) {
-
+                this.loadingService.ejecutarLoading("Actualizando profesor...");
                 this.profesoresService.putProfesor(this.profesor).subscribe({
                     next: async (data) => {
                         this.profesoresEdit[this.findIndexById(this.profesor.codigo)] = await this.profesor;
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Profesor Actualizado', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         if(typeof error.error.statusMessage == "string"){
@@ -108,14 +114,17 @@ export class ProfesoresComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             } else {
+                this.loadingService.ejecutarLoading("Guardando profesor...");
                 this.profesoresService.postProfesor(this.profesor).subscribe({
                     next: async (data) => {
                         data.cursos = [];
                         this.profesoresEdit.push(data);
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Profesor Creado', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         if(typeof error.error.statusMessage == "string"){
@@ -125,6 +134,7 @@ export class ProfesoresComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             }

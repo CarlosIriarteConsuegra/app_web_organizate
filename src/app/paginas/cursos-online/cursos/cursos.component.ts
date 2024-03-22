@@ -11,6 +11,7 @@ import { AreaCursoDTO } from '../../../models/cursos/area_curso.dto';
 import { ProfesorDTO } from '../../../models/cursos/profesor.dto';
 import { DatePipe } from '@angular/common';
 import { TokenService } from '../../../services/seguridad/token.service';
+import { LoadingService } from '../../../components/loadingWindow/loading.service';
 
 @Component({
     selector: 'app-cursos',
@@ -42,11 +43,18 @@ export class CursosComponent {
         private profesoresService: ProfesoresService,
         private messageService: MessageService,
         public datePipe: DatePipe, 
-        public tokenService: TokenService) {
+        public tokenService: TokenService,
+        private loadingService: LoadingService) {
 
     }
 
     ngOnInit() {
+        let cursosCargados = false;
+        let plataformasCargadas = false;
+        let areasCursosCargadas = false;
+        let profesoresCargados = false;
+
+        this.loadingService.ejecutarLoading("Cargando cursos...");
         this.cursosService.getCursos().subscribe({
             next: async (data) => {
                 if (data && data.length > 0) {
@@ -54,12 +62,19 @@ export class CursosComponent {
                 } else {
                     this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes cursos registrados", life: 3000 });
                 }
+                cursosCargados = true;
+                if(cursosCargados && plataformasCargadas && areasCursosCargadas && profesoresCargados){
+                    this.loadingService.finalizarLoading();
+                }
             },
             error: async (error) => {
                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                cursosCargados = true;
+                if(cursosCargados && plataformasCargadas && areasCursosCargadas && profesoresCargados){
+                    this.loadingService.finalizarLoading();
+                }
             }
         })
-
 
         this.plataformasService.getPlataforms().subscribe({
             next: async (data) => {
@@ -71,9 +86,17 @@ export class CursosComponent {
                 } else {
                     this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes plataformas registradas", life: 3000 });
                 }
+                plataformasCargadas = true;
+                if(cursosCargados && plataformasCargadas && areasCursosCargadas && profesoresCargados){
+                    this.loadingService.finalizarLoading();
+                }
             },
             error: async (error) => {
                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                plataformasCargadas = true;
+                if(cursosCargados && plataformasCargadas && areasCursosCargadas && profesoresCargados){
+                    this.loadingService.finalizarLoading();
+                }
             }
         });
 
@@ -87,9 +110,17 @@ export class CursosComponent {
                 } else {
                     this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes areas de cursos registradas", life: 3000 });
                 }
+                areasCursosCargadas = true;
+                if(cursosCargados && plataformasCargadas && areasCursosCargadas && profesoresCargados){
+                    this.loadingService.finalizarLoading();
+                }
             },
             error: async (error) => {
                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                areasCursosCargadas = true;
+                if(cursosCargados && plataformasCargadas && areasCursosCargadas && profesoresCargados){
+                    this.loadingService.finalizarLoading();
+                }
             }
         });
 
@@ -103,9 +134,17 @@ export class CursosComponent {
                 } else {
                     this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes profesores registrados", life: 3000 });
                 }
+                profesoresCargados = true;
+                if(cursosCargados && plataformasCargadas && areasCursosCargadas && profesoresCargados){
+                    this.loadingService.finalizarLoading();
+                }
             },
             error: async (error) => {
                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                profesoresCargados = true;
+                if(cursosCargados && plataformasCargadas && areasCursosCargadas && profesoresCargados){
+                    this.loadingService.finalizarLoading();
+                }
             }
         });
 
@@ -184,10 +223,12 @@ export class CursosComponent {
         this.curso.profesores = this.selectedProfesores;
         if (this.curso.codigo?.trim() && this.curso.nombre?.trim() && this.curso.descripcion?.trim() && this.curso.nivel != null && this.curso.idioma?.trim()) {
             if (this.curso.id) {
+                this.loadingService.ejecutarLoading("Actualizando curso...");
                 this.cursosService.putCurso(this.curso).subscribe({
                     next: async (data) => {
                         this.cursosEdit[this.findIndexById(this.curso.codigo)] = data;
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Curso Actualizado', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         if (typeof error.error.statusMessage == "string") {
@@ -197,14 +238,17 @@ export class CursosComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             } else {
+                this.loadingService.ejecutarLoading("Guardando curso...");
                 this.cursosService.postCurso(this.curso).subscribe({
                     next: async (data) => {
                         data.rutas = [];
                         this.cursosEdit.push(data);
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Curso Creado', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         if (typeof error.error.statusMessage == "string") {
@@ -214,6 +258,7 @@ export class CursosComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             }

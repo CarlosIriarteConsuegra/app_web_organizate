@@ -5,6 +5,7 @@ import { PlataformaDTO } from '../../../models/cursos/plataforma.dto';
 import { PlataformasService } from '../../../services/cursos-online/plataformas.service';
 import { DatePipe } from '@angular/common';
 import { TokenService } from '../../../services/seguridad/token.service';
+import { LoadingService } from '../../../components/loadingWindow/loading.service';
 
 @Component({
     selector: 'app-plataformas',
@@ -27,9 +28,11 @@ export class PlataformasComponent {
         private plataformasService: PlataformasService,
         private messageService: MessageService,
         public datePipe: DatePipe, 
-        public tokenService: TokenService) { }
+        public tokenService: TokenService,
+        private loadingService: LoadingService) { }
 
     ngOnInit() {
+        this.loadingService.ejecutarLoading("Cargando plataformas...");
         this.plataformasService.getPlataforms().subscribe({
             next: async (data) => {
                 if(data.length > 0){
@@ -37,9 +40,11 @@ export class PlataformasComponent {
                 }else{
                     this.messageService.add({ severity: 'warn', summary: 'Sin información', detail: "No tienes plataformas registradas", life: 3000 });
                 }
+                this.loadingService.finalizarLoading();
             },
             error: (error) => {
                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                this.loadingService.finalizarLoading();
             }
         })
 
@@ -100,11 +105,12 @@ export class PlataformasComponent {
         this.plataformasEdit = this.plataformas;
         if (this.plataforma.codigo?.trim() && this.plataforma.nombre?.trim() && this.plataforma.descripcion?.trim() && this.plataforma.logo?.trim()) {
             if (this.plataforma.id) {
-
+                this.loadingService.ejecutarLoading("Actualizando plataforma...");
                 this.plataformasService.putPlataform(this.plataforma).subscribe({
                     next: async (data) => {
                         this.plataformasEdit[this.findIndexById(this.plataforma.codigo)] = await this.plataforma;
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Plataforma Actualizada', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         if(typeof error.error.statusMessage == "string"){
@@ -114,14 +120,17 @@ export class PlataformasComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             } else {
+                this.loadingService.ejecutarLoading("Guardando plataforma...");
                 this.plataformasService.postPlataform(this.plataforma).subscribe({
                     next: async (data) => {
                         data.cursosPlataforma = [];
                         this.plataformasEdit.push(data);
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Plataforma Creada', life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         if(typeof error.error.statusMessage == "string"){
@@ -131,6 +140,7 @@ export class PlataformasComponent {
                                 this.messageService.add({ severity: 'error', summary: 'Atención', detail: mensaje, life: 3000 });
                             }
                         }
+                        this.loadingService.finalizarLoading();
                     }
                 })
             }

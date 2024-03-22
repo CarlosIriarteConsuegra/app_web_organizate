@@ -5,11 +5,15 @@ import { MessageService } from 'primeng/api';
 import { AreaCursoDTO } from '../../models/cursos/area_curso.dto';
 import { ConfigUrlService } from '../../../core/configUrl-service';
 import { BaseService } from '../base.service';
+import { LoadingService } from '../../components/loadingWindow/loading.service';
 
 @Injectable()
 export class AreaCursoService extends BaseService {
 
-    constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService) { 
+    constructor(http: HttpClient,
+        private messageService: MessageService,
+        configUrlService: ConfigUrlService,
+        private loadingService: LoadingService) { 
         super(http, configUrlService);
     }
 
@@ -27,9 +31,11 @@ export class AreaCursoService extends BaseService {
 
     deleteAreasCursos(areasCursos: AreaCursoDTO[]): AreaCursoDTO[] {
         for (let areaCursos of areasCursos) {
+            this.loadingService.ejecutarLoading("Eliminando areas de cursos");
             if (areaCursos.cursos && areaCursos.cursos.length > 0) {
                 this.messageService.add({ severity: 'error', summary: 'Area de cursos con cursos', detail: `El area de cursos ${areaCursos.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
                 areasCursos = areasCursos.filter(area_curso => area_curso.id !== areaCursos.id);
+                this.loadingService.finalizarLoading();
             } else {
                 const httpOptions = {
                     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -40,11 +46,13 @@ export class AreaCursoService extends BaseService {
                     next: async (data) => {
                         console.log('Solicitud DELETE exitosa', data);
                         this.messageService.add({ severity: 'success', summary: 'Eliminada', detail: `Area de cursos ${areaCursos.nombre} eliminada`, life: 3000 });
+                        this.loadingService.finalizarLoading();
                     },
                     error: (error) => {
                         console.log('Solicitud DELETE error', error);
                         areasCursos = areasCursos.filter(area_curso => area_curso.id !== areaCursos.id);
                         this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                        this.loadingService.finalizarLoading();
                     }
                 })
             }
@@ -54,8 +62,10 @@ export class AreaCursoService extends BaseService {
     }
 
     deleteAreaCursos(areaCursos: AreaCursoDTO) {
+        this.loadingService.ejecutarLoading("Eliminando area de cursos");
         if (areaCursos.cursos && areaCursos.cursos.length > 0) {
             this.messageService.add({ severity: 'error', summary: 'Area de cursos con cursos', detail: `El area de cursos ${areaCursos.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
+            this.loadingService.finalizarLoading();
         } else {
             const httpOptions = {
                 headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -66,10 +76,12 @@ export class AreaCursoService extends BaseService {
                 next: async (data) => {
                     console.log('Solicitud DELETE exitosa', data);
                     this.messageService.add({ severity: 'success', summary: 'Eliminada', detail: `Area de cursos ${areaCursos.nombre} eliminada`, life: 3000 });
+                    this.loadingService.finalizarLoading();
                 },
                 error: (error) => {
                     console.log('Solicitud DELETE error', error);
                     this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
+                    this.loadingService.finalizarLoading();
                 }
             })
         }
