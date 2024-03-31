@@ -6,12 +6,13 @@ import { BaseService } from '../base.service';
 import { UsuariosDTO } from '../../models/seguridad/usuarios.dto';
 import { environment } from '../../../enviroments/environment';
 import { TokenDto } from '../../models/seguridad/token.dto';
+import { LoadingService } from '../../components/loadingWindow/loading.service';
 
 @Injectable()
 export class AuthService extends BaseService {
 
-  constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService) {
-    super(http, configUrlService);
+  constructor(http: HttpClient, messageService: MessageService, configUrlService: ConfigUrlService, loadingService: LoadingService) {
+    super(http, configUrlService, messageService, loadingService);
   }
 
   postLogin(usuario: UsuariosDTO) {

@@ -3,11 +3,12 @@ import { BaseService } from '../base.service';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { ConfigUrlService } from '../../../core/configUrl-service';
+import { LoadingService } from '../../components/loadingWindow/loading.service';
 
 @Injectable()
 export class RolService extends BaseService {
 
-  constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService) {
-    super(http, configUrlService);
+  constructor(http: HttpClient, messageService: MessageService, configUrlService: ConfigUrlService, loadingService: LoadingService) {
+    super(http, configUrlService, messageService, loadingService);
   }
 }

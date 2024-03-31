@@ -12,9 +12,8 @@ import { LoadingService } from '../../components/loadingWindow/loading.service';
 })
 export class UsuarioService extends BaseService {
 
-  constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService,
-    private loadingService: LoadingService) {
-    super(http, configUrlService);
+  constructor(http: HttpClient, configUrlService: ConfigUrlService, messageService: MessageService, loadingService: LoadingService) {
+    super(http, configUrlService, messageService, loadingService);
   }
 
   getUsuarios() {
@@ -35,44 +34,13 @@ export class UsuarioService extends BaseService {
 
   eliminarUsuarios(usuarios: UsuariosDTO[]) {
     for (let usuario of usuarios) {
-      this.loadingService.ejecutarLoading("Eliminando usuarios...");
-      const httpOptions = {
-        headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-        body: usuario
-      };
-
-      this.http.delete<any>(`${environment.microproxy_cursos}usuarios`, httpOptions).subscribe({
-        next: async (data) => {
-          this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: `Usuario ${usuario.nombre} eliminado`, life: 3000 });
-          this.loadingService.finalizarLoading();
-        },
-        error: (error) => {
-          usuarios = usuarios.filter(user => user.id != usuario.id);
-          this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-          this.loadingService.finalizarLoading();
-        }
-      })
-
+      this.delete(usuario, `${environment.microproxy_seguridad}usuarios`, "Eliminando usuarios...", `Usuario ${usuario.nombre} eliminado`);
     }
 
     return usuarios;
   }
 
   deleteEliminarUsuario(usuario: UsuariosDTO) {
-    this.loadingService.ejecutarLoading("Eliminando usuario...");
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      body: usuario
-    };
-    this.http.delete<any>(`${environment.microproxy_seguridad}usuarios`, httpOptions).subscribe({
-      next: async (data) => {
-        this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: `Usuario ${usuario.nombre} eliminado`, life: 3000 });
-        this.loadingService.finalizarLoading();
-      },
-      error: (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-        this.loadingService.finalizarLoading();
-      }
-    })
+    this.delete(usuario, `${environment.microproxy_seguridad}usuarios`, "Eliminando usuario...", `Usuario ${usuario.nombre} eliminado`);
   }
 }

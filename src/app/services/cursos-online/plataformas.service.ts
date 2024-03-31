@@ -10,8 +10,8 @@ import { LoadingService } from '../../components/loadingWindow/loading.service';
 @Injectable()
 export class PlataformasService extends BaseService{
 
-    constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService, private loadingService: LoadingService) { 
-        super(http, configUrlService);
+    constructor(http: HttpClient, messageService: MessageService, configUrlService: ConfigUrlService, loadingService: LoadingService) { 
+        super(http, configUrlService, messageService, loadingService);
     }
 
     getPlataforms() {
@@ -34,24 +34,7 @@ export class PlataformasService extends BaseService{
                 plataforms = plataforms.filter(plataforma => plataforma.id != plataform.id);
                 this.loadingService.finalizarLoading();
             } else {
-                const httpOptions = {
-                    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-                    body: plataform
-                };
-
-                this.http.delete<any>(`${environment.microproxy_cursos}plataformas`, httpOptions).subscribe({
-                    next: async (data) => {
-                        console.log('Solicitud DELETE exitosa', data);
-                        this.messageService.add({ severity: 'success', summary: 'Eliminada', detail: `Plataforma ${plataform.nombre} eliminada`, life: 3000 });
-                        this.loadingService.finalizarLoading();
-                    },
-                    error: (error) => {
-                        console.log('Solicitud DELETE error', error);
-                        plataforms = plataforms.filter(plataforma => plataforma.id != plataform.id);
-                        this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-                        this.loadingService.finalizarLoading();
-                    }
-                })
+                this.delete(plataform, `${environment.microproxy_cursos}plataformas`, "Eliminando plataformas...", `Plataforma ${plataform.nombre} eliminada`);
             }
         }
 
@@ -64,23 +47,7 @@ export class PlataformasService extends BaseService{
             this.messageService.add({ severity: 'error', summary: 'Plataforma con cursos', detail: `La plataforma ${plataform.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
             this.loadingService.finalizarLoading();
         } else {
-            const httpOptions = {
-                headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-                body: plataform
-            };
-
-            this.http.delete<any>(`${environment.microproxy_cursos}plataformas`, httpOptions).subscribe({
-                next: async (data) => {
-                    console.log('Solicitud DELETE exitosa', data);
-                    this.messageService.add({ severity: 'success', summary: 'Eliminada', detail: `Plataforma ${plataform.nombre} eliminada`, life: 3000 });
-                    this.loadingService.finalizarLoading();
-                },
-                error: (error) => {
-                    console.log('Solicitud DELETE error', error);
-                    this.messageService.add({ severity: 'error', summary: 'Error Eliminar', detail: `Error al eliminar la plataforma ${plataform.nombre}`, life: 3000 });
-                    this.loadingService.finalizarLoading();
-                }
-            })
+            this.delete(plataform, `${environment.microproxy_cursos}plataformas`, "Eliminando plataforma...", `Plataforma ${plataform.nombre} eliminada`);
         }
     }
 }

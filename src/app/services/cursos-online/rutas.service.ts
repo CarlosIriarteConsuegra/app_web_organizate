@@ -10,8 +10,8 @@ import { LoadingService } from '../../components/loadingWindow/loading.service';
 @Injectable()
 export class RutasService extends BaseService {
 
-    constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService, private loadingService: LoadingService) { 
-        super(http, configUrlService);
+    constructor(http: HttpClient, messageService: MessageService, configUrlService: ConfigUrlService, loadingService: LoadingService) { 
+        super(http, configUrlService, messageService, loadingService);
     }
 
     getRutas() {
@@ -28,46 +28,12 @@ export class RutasService extends BaseService {
 
     deleteRutas(rutas: RutaDTO[]) {
         for (let ruta of rutas) {
-            this.loadingService.ejecutarLoading("Eliminando rutas...");
-            const httpOptions = {
-                headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-                body: ruta
-            };
-
-            this.http.delete<any>(`${environment.microproxy_cursos}rutas`, httpOptions).subscribe({
-                next: async (data) => {
-                    this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: `Ruta ${ruta.nombre} eliminada`, life: 3000 });
-                    this.loadingService.finalizarLoading();
-                },
-                error: (error) => {
-                    rutas = rutas.filter(ruts => ruts.id != ruta.id);
-                    this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-                    this.loadingService.finalizarLoading();
-                }
-            })
-
+            this.delete(ruta, `${environment.microproxy_cursos}rutas`, "Eliminando rutas...", `Ruta ${ruta.nombre} eliminada`);
         }
-
         return rutas;
     }
 
     deleteRuta(ruta: RutaDTO) {
-        this.loadingService.ejecutarLoading("Eliminando ruta...");
-        const httpOptions = {
-            headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-            body: ruta
-        };
-
-        this.http.delete<any>(`${environment.microproxy_cursos}rutas`, httpOptions).subscribe({
-            next: async (data) => {
-                this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: `Ruta ${ruta.nombre} eliminada`, life: 3000 });
-                this.loadingService.finalizarLoading();
-            },
-            error: (error) => {
-                this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-                this.loadingService.finalizarLoading();
-            }
-        })
-
+        this.delete(ruta, `${environment.microproxy_cursos}rutas`, "Eliminando ruta...", `Ruta ${ruta.nombre} eliminada`);
     }
 }

@@ -10,8 +10,8 @@ import { LoadingService } from '../../components/loadingWindow/loading.service';
 @Injectable()
 export class CursosService extends BaseService {
 
-    constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService, private loadingService: LoadingService) { 
-        super(http, configUrlService);
+    constructor(http: HttpClient, messageService: MessageService, configUrlService: ConfigUrlService, loadingService: LoadingService) { 
+        super(http, configUrlService, messageService, loadingService);
     }
 
     getCursos() {
@@ -34,22 +34,7 @@ export class CursosService extends BaseService {
                 cursos = cursos.filter(course => course.id != curso.id);
                 this.loadingService.finalizarLoading();
             } else {
-                const httpOptions = {
-                    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-                    body: curso
-                };
-
-                this.http.delete<any>(`${environment.microproxy_cursos}cursos`, httpOptions).subscribe({
-                    next: async (data) => {
-                        this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: `Curso ${curso.nombre} eliminado`, life: 3000 });
-                        this.loadingService.finalizarLoading();
-                    },
-                    error: (error) => {
-                        cursos = cursos.filter(course => course.id != curso.id);
-                        this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-                        this.loadingService.finalizarLoading();
-                    }
-                })
+                this.delete(curso, `${environment.microproxy_cursos}cursos`, "Eliminando curso...", `Curso ${curso.nombre} eliminado`);
             }
         }
 
@@ -62,21 +47,7 @@ export class CursosService extends BaseService {
             this.messageService.add({ severity: 'error', summary: 'Curso en rutas', detail: `El curso ${curso.nombre} pertenece a rutas de aprendizaje`, life: 3000 });
             this.loadingService.finalizarLoading();
         } else {
-            const httpOptions = {
-                headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-                body: curso
-            };
-
-            this.http.delete<any>(`${environment.microproxy_cursos}cursos`, httpOptions).subscribe({
-                next: async (data) => {
-                    this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: `Curso ${curso.nombre} eliminado`, life: 3000 });
-                    this.loadingService.finalizarLoading();
-                },
-                error: (error) => {
-                    this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-                    this.loadingService.finalizarLoading();
-                }
-            })
+            this.delete(curso, `${environment.microproxy_cursos}cursos`, "Eliminando curso...", `Curso ${curso.nombre} eliminado`);
         }
     }
 }

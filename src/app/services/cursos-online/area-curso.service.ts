@@ -11,10 +11,10 @@ import { LoadingService } from '../../components/loadingWindow/loading.service';
 export class AreaCursoService extends BaseService {
 
     constructor(http: HttpClient,
-        private messageService: MessageService,
+        messageService: MessageService,
         configUrlService: ConfigUrlService,
-        private loadingService: LoadingService) { 
-        super(http, configUrlService);
+        loadingService: LoadingService) { 
+            super(http, configUrlService, messageService, loadingService);
     }
 
     getAreasCursos() {
@@ -37,24 +37,7 @@ export class AreaCursoService extends BaseService {
                 areasCursos = areasCursos.filter(area_curso => area_curso.id !== areaCursos.id);
                 this.loadingService.finalizarLoading();
             } else {
-                const httpOptions = {
-                    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-                    body: areaCursos
-                };
-
-                this.http.delete<any>(`${environment.microproxy_cursos}area-curso`, httpOptions).subscribe({
-                    next: async (data) => {
-                        console.log('Solicitud DELETE exitosa', data);
-                        this.messageService.add({ severity: 'success', summary: 'Eliminada', detail: `Area de cursos ${areaCursos.nombre} eliminada`, life: 3000 });
-                        this.loadingService.finalizarLoading();
-                    },
-                    error: (error) => {
-                        console.log('Solicitud DELETE error', error);
-                        areasCursos = areasCursos.filter(area_curso => area_curso.id !== areaCursos.id);
-                        this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-                        this.loadingService.finalizarLoading();
-                    }
-                })
+                this.delete(areaCursos, `${environment.microproxy_cursos}area-curso`, "Eliminando area de cursos...", `Area de cursos ${areaCursos.nombre} eliminada`);
             }
         }
 
@@ -67,23 +50,7 @@ export class AreaCursoService extends BaseService {
             this.messageService.add({ severity: 'error', summary: 'Area de cursos con cursos', detail: `El area de cursos ${areaCursos.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
             this.loadingService.finalizarLoading();
         } else {
-            const httpOptions = {
-                headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-                body: areaCursos
-            };
-
-            this.http.delete<any>(`${environment.microproxy_cursos}area-curso`, httpOptions).subscribe({
-                next: async (data) => {
-                    console.log('Solicitud DELETE exitosa', data);
-                    this.messageService.add({ severity: 'success', summary: 'Eliminada', detail: `Area de cursos ${areaCursos.nombre} eliminada`, life: 3000 });
-                    this.loadingService.finalizarLoading();
-                },
-                error: (error) => {
-                    console.log('Solicitud DELETE error', error);
-                    this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-                    this.loadingService.finalizarLoading();
-                }
-            })
+            this.delete(areaCursos, `${environment.microproxy_cursos}area-curso`, "Eliminando area de cursos...", `Area de cursos ${areaCursos.nombre} eliminada`);
         }
     }
 }

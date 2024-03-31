@@ -10,9 +10,9 @@ import { LoadingService } from '../../components/loadingWindow/loading.service';
 @Injectable()
 export class ProfesoresService extends BaseService {
 
-    constructor(http: HttpClient, private messageService: MessageService, configUrlService: ConfigUrlService,
-        private loadingService: LoadingService) { 
-        super(http, configUrlService);
+    constructor(http: HttpClient, messageService: MessageService, configUrlService: ConfigUrlService,
+        loadingService: LoadingService) { 
+            super(http, configUrlService, messageService, loadingService);
     }
 
     getProfesores() {
@@ -35,24 +35,7 @@ export class ProfesoresService extends BaseService {
                 profesores = profesores.filter(profe => profe.id !== profesor.id);
                 this.loadingService.finalizarLoading();
             } else {
-                const httpOptions = {
-                    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-                    body: profesor
-                };
-
-                this.http.delete<any>(`${environment.microproxy_cursos}profesores`, httpOptions).subscribe({
-                    next: async (data) => {
-                        console.log('Solicitud DELETE exitosa', data);
-                        this.messageService.add({ severity: 'success', summary: 'Eliminada', detail: `Profesor ${profesor.nombre} eliminado`, life: 3000 });
-                        this.loadingService.finalizarLoading();
-                    },
-                    error: (error) => {
-                        console.log('Solicitud DELETE error', error);
-                        profesores = profesores.filter(profe => profe.id !== profesor.id);
-                        this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-                        this.loadingService.finalizarLoading();
-                    }
-                })
+                this.delete(profesor, `${environment.microproxy_cursos}profesores`, "Eliminando profesores...", `Profesor ${profesor.nombre} eliminado`);
             }
         }
 
@@ -65,23 +48,7 @@ export class ProfesoresService extends BaseService {
             this.messageService.add({ severity: 'error', summary: 'Profesor con cursos', detail: `El profesor ${profesor.nombre} tiene cursos asginados, por lo cual no se puede eliminar`, life: 3000 });
             this.loadingService.finalizarLoading();
         } else {
-            const httpOptions = {
-                headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-                body: profesor
-            };
-
-            this.http.delete<any>(`${environment.microproxy_cursos}profesores`, httpOptions).subscribe({
-                next: async (data) => {
-                    console.log('Solicitud DELETE exitosa', data);
-                    this.messageService.add({ severity: 'success', summary: 'Eliminada', detail: `Profesor ${profesor.nombre} eliminado`, life: 3000 });
-                    this.loadingService.finalizarLoading();
-                },
-                error: (error) => {
-                    console.log('Solicitud DELETE error', error);
-                    this.messageService.add({ severity: 'error', summary: 'Atención', detail: error.statusText, life: 3000 });
-                    this.loadingService.finalizarLoading();
-                }
-            })
+            this.delete(profesor, `${environment.microproxy_cursos}profesores`, "Eliminando profesor...", `Profesor ${profesor.nombre} eliminado`);
         }
     }
 }
