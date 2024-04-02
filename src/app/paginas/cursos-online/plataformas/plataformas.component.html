@@ -22,7 +22,7 @@
 
             <ng-container *ngIf="plataformas && plataformas.length > 0">
                 <p-table #dt [value]="plataformas" scrollDirection="both" [scrollable]="true" scrollHeight="400px"
-                    [columns]="cols" responsiveLayout="scroll" [rows]="2"
+                    [columns]="cols" responsiveLayout="scroll" [rows]="10"
                     [globalFilterFields]="['codigo','nombre','descripcion']" [paginator]="true"
                     [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
                     currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} plataformas"
