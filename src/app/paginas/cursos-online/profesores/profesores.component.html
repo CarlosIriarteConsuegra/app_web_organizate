@@ -51,7 +51,8 @@
                                 <p-tableCheckbox [value]="profesor"></p-tableCheckbox>
                             </td>
                             <td>
-                                <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
+                                <div
+                                    class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4 align-items-center">
                                     <div class="flex flex-row justify-content-between align-items-start flex-1 gap-4">
                                         <div class="flex flex-column align-items-center sm:align-items-start gap-3">
                                             <div class="text-2xl font-bold text-900">{{ profesor.codigo }}-{{
@@ -67,32 +68,44 @@
                                             <div class="text-1 text-700">
                                                 <p class="font-bold">Redes sociales</p>
                                                 <div>
-                                                    <a href="{{profesor.facebook}}" target="_blank" rel="noopener noreferrer" class="m-2"><i
-                                                            class="pi pi-facebook m.2" style="font-size: 1.8rem; color: #3b5998"></i></a>
+                                                    <a *ngIf="profesor.facebook" href="{{profesor.facebook}}"
+                                                        target="_blank" rel="noopener noreferrer" class="m-2"><i
+                                                            class="pi pi-facebook m.2"
+                                                            style="font-size: 1.8rem; color: #3b5998"></i></a>
 
-                                                    <a href="{{profesor.linkedin}}" target="_blank" rel="noopener noreferrer" class="m-2"><i
-                                                            class="pi pi-linkedin" style="font-size: 1.8rem; color: #0e76a8"></i></a>
+                                                    <a *ngIf="profesor.linkedin" href="{{profesor.linkedin}}"
+                                                        target="_blank" rel="noopener noreferrer" class="m-2"><i
+                                                            class="pi pi-linkedin"
+                                                            style="font-size: 1.8rem; color: #0e76a8"></i></a>
 
-                                                    <a href="{{profesor.youtube}}" target="_blank" rel="noopener noreferrer" class="m-2"><i
-                                                            class="pi pi-youtube" style="font-size: 1.8rem; color: #c4302b"></i></a>
+                                                    <a *ngIf="profesor.youtube" href="{{profesor.youtube}}"
+                                                        target="_blank" rel="noopener noreferrer" class="m-2"><i
+                                                            class="pi pi-youtube"
+                                                            style="font-size: 1.8rem; color: #c4302b"></i></a>
 
-                                                    <a href="{{profesor.instagram}}" target="_blank" rel="noopener noreferrer" class="m-2"><i
-                                                            class="pi pi-instagram p-1" style="font-size: 1.5rem; color: #ffffff; background: #f09433; 
+                                                    <a *ngIf="profesor.instagram" href="{{profesor.instagram}}"
+                                                        target="_blank" rel="noopener noreferrer" class="m-2"><i
+                                                            class="pi pi-instagram p-1"
+                                                            style="font-size: 1.5rem; color: #ffffff; background: #f09433; 
                                                             background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
                                                             background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
                                                             background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
                                                             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );"></i></a>
 
-                                                    <a href="{{profesor.x}}" target="_blank" rel="noopener noreferrer" class="m-2"><svg
+                                                    <a *ngIf="profesor.x" href="{{profesor.x}}" target="_blank"
+                                                        rel="noopener noreferrer" class="m-2"><svg
                                                             xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                                             fill="currentColor" class="bi bi-twitter-x p-1"
-                                                            viewBox="0 0 16 16" style="color: #ffffff; background-color: #000000;">
+                                                            viewBox="0 0 16 16"
+                                                            style="color: #ffffff; background-color: #000000;">
                                                             <path
                                                                 d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
                                                         </svg></a>
 
-                                                        <a href="{{profesor.correo}}" target="_blank" rel="noopener noreferrer" class="m-2"><i
-                                                            class="pi pi-envelope" style="font-size: 1.8rem; color: #c4302b"></i></a>
+                                                    <a *ngIf="profesor.correo" href="{{profesor.correo}}"
+                                                        target="_blank" rel="noopener noreferrer" class="m-2"><i
+                                                            class="pi pi-envelope"
+                                                            style="font-size: 1.8rem; color: #c4302b"></i></a>
                                                 </div>
                                             </div>
                                         </div>
