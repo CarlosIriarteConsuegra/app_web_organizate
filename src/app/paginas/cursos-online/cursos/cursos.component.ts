@@ -30,7 +30,7 @@ export class CursosComponent {
     cols!: any[];
     rowsPerPageOptions = [5, 10, 20];
     plataformas: any[] = [];
-    selectdPlataforma: PlataformaDTO | undefined = {};
+    selectdPlataforma: any;
     areasCursos: any[] = [];
     selectdAreasCursos: AreaCursoDTO[] | undefined = [];
     profesores: ProfesorDTO[] = [];
@@ -183,7 +183,7 @@ export class CursosComponent {
 
     editCurso(curso: CursoDTO) {
         this.curso = { ...curso };
-        this.selectdPlataforma = this.curso.plataforma ? this.curso.plataforma : {};
+        this.selectdPlataforma = this.curso.plataforma ? this.curso.plataforma.id : {};
         this.selectdAreasCursos = this.curso.areascurso ? this.curso.areascurso : [];
         this.selectedProfesores = this.curso.profesores ? this.curso.profesores : [];
 
@@ -218,7 +218,7 @@ export class CursosComponent {
     saveCurso() {
         this.submitted = true;
         this.cursosEdit = this.cursos;
-        this.curso.plataforma = this.selectdPlataforma;
+        this.curso.plataforma = this.plataformas.filter(plataforma => plataforma.id >= this.selectdPlataforma)[0];
         this.curso.areascurso = this.selectdAreasCursos;
         this.curso.profesores = this.selectedProfesores;
         if (this.curso.codigo?.trim() && this.curso.nombre?.trim() && this.curso.descripcion?.trim() && this.curso.nivel != null && this.curso.idioma?.trim()) {
@@ -226,7 +226,7 @@ export class CursosComponent {
                 this.loadingService.ejecutarLoading("Actualizando curso...");
                 this.cursosService.putCurso(this.curso).subscribe({
                     next: async (data) => {
-                        this.cursosEdit[this.findIndexById(this.curso.codigo)] = data;
+                        this.cursos[this.findIndexById(this.curso.codigo)] = data;
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Curso Actualizado', life: 3000 });
                         this.loadingService.finalizarLoading();
                     },
