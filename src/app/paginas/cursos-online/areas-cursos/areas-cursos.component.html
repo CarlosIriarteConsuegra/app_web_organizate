@@ -94,13 +94,13 @@
                 @if (areaCursos.id) {
                 <div class="field">
                     <label for="codigo">Codigo</label>
-                    <input type="text" pInputText id="codigo" disabled [(ngModel)]="areaCursos.codigo" required
+                    <input type="text" pInputText id="codigo" autocomplete="off" disabled [(ngModel)]="areaCursos.codigo" required
                         autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !areaCursos.codigo}" />
                 </div>
                 } @else {
                 <div class="field">
                     <label for="codigo">Codigo</label>
-                    <input type="text" pInputText id="codigo" [(ngModel)]="areaCursos.codigo" required autofocus
+                    <input type="text" pInputText id="codigo" autocomplete="off" [(ngModel)]="areaCursos.codigo" required autofocus
                         [ngClass]="{'ng-invalid ng-dirty' : submitted && !areaCursos.codigo}" />
                     <small class="ng-dirty ng-invalid" *ngIf="submitted && !areaCursos.codigo">El codigo es
                         requerido.</small>
@@ -109,7 +109,7 @@
 
                 <div class="field">
                     <label for="nombre">Nombre</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="areaCursos.nombre" maxlength="200" required
+                    <input type="text" pInputText id="name" autocomplete="off" [(ngModel)]="areaCursos.nombre" maxlength="200" required
                         autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !areaCursos.nombre}" />
                     <small class="ng-dirty ng-invalid" *ngIf="submitted && !areaCursos.nombre">El nombre es
                         requerido.</small>

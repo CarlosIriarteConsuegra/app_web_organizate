@@ -1,8 +1,8 @@
 <div class="grid">
     <div class="col-12 p-0 lg:p-3">
-        <div class="card px-3 py-3 lg:px-5 lg:py-5">
+        <div class="card p-3">
             <p-toast></p-toast>
-            <p-toolbar styleClass="mb-4 p-2">
+            <p-toolbar styleClass="mb-2 p-1">
                 <ng-template pTemplate="left">
                     <div class="my-2">
                         <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2 p-2"
@@ -26,10 +26,10 @@
                     [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" [(selection)]="selectedCursos"
                     selectionMode="multiple" [rowHover]="true" dataKey="id">
 
-                    <ng-template pTemplate="caption" styleClass="p-2">
+                    <ng-template pTemplate="caption" styleClass="p-1">
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center p-0">
                             <h5 class="m-0">Cursos</h5>
-                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <span class="block mt-1 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search"></i>
                                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
                                     placeholder="Buscar..." class="w-full sm:w-auto" />
@@ -39,7 +39,7 @@
                     <ng-template pTemplate="header" styleClass="p-1">
                         <tr>
                             <th class="p-0 text-center" *ngIf="tokenService.isAdmin()">
-                                <p-tableHeaderCheckbox ></p-tableHeaderCheckbox>
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                             </th>
                             <th class="text-center">Curso</th>
                         </tr>
@@ -50,11 +50,10 @@
                                 <p-tableCheckbox [value]="curso"></p-tableCheckbox>
                             </td>
                             <td>
-                                <div class="flex flex-row p-2 gap-3 align-items-start" style="width:700px !important;">
-                                    <div
-                                        class="flex flex-row justify-content-between align-items-start flex-1 gap-4">
+                                <div class="flex flex-row p-1 gap-2 align-items-start" style="width:700px !important;">
+                                    <div class="flex flex-row justify-content-between align-items-start flex-1 gap-4">
                                         <div class="flex flex-column align-items-start gap-2">
-                                            <div class="text-2xl font-bold text-900">{{ curso.codigo }}-{{ curso.nombre
+                                            <div class="text-xl font-bold text-900">{{ curso.codigo }}-{{ curso.nombre
                                                 }}</div>
                                             <div>
                                                 <p><span class="font-bold">Nivel: </span>{{ curso.nivel }}<br>
@@ -101,10 +100,15 @@
 
                                                 @if (curso.areascurso != null && curso.areascurso.length > 0) {
                                                 <div>
-                                                    <h5 class="inline-block">Areas del Curso: </h5>
-                                                        <span class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
-                                                        style="border: solid 1px #3b82f6; border-radius: 5px;" *ngFor="let areaCursos of curso.areascurso;">{{ areaCursos.nombre
+                                                    <h5 class="inline-block m-1">Areas del Curso: </h5>
+                                                    <div class="flex flex-row">
+                                                        <span
+                                                            class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
+                                                            style="border: solid 1px #3b82f6; border-radius: 5px;"
+                                                            *ngFor="let areaCursos of curso.areascurso;">{{
+                                                            areaCursos.nombre
                                                             }}</span>
+                                                    </div>
                                                 </div>
                                                 }@else {
                                                 <h5 class="mt-2 mb-2">No hay areas de cursos asignadas</h5>
@@ -112,9 +116,15 @@
 
                                                 @if (curso.profesores != null && curso.profesores.length > 0) {
                                                 <div>
-                                                    <h5 class="inline-block">Profesores: </h5>
-                                                        <span class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
-                                                        style="border: solid 1px #3b82f6; border-radius: 5px;" *ngFor="let profesor of curso.profesores;">{{ profesor.nombre }}</span>
+                                                    <h5 class="inline-block m-1">Profesores: </h5>
+                                                    <div class="flex flex-row">
+                                                        <span
+                                                            class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
+                                                            style="border: solid 1px #3b82f6; border-radius: 5px;"
+                                                            *ngFor="let profesor of curso.profesores;">{{
+                                                            profesor.nombre
+                                                            }}</span>
+                                                    </div>
                                                 </div>
                                                 }@else {
                                                 <h5 class="mt-2 mb-2">No hay profesores asignados</h5>
@@ -122,26 +132,18 @@
 
                                                 @if (curso.rutas != null && curso.rutas.length > 0) {
                                                 <div>
-                                                    <h5 class="inline-block">Rutas: </h5>
-                                                    <span
-                                                        class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
-                                                        style="border: solid 1px #3b82f6; border-radius: 5px;"
-                                                        *ngFor="let ruta of curso.rutas;">{{ ruta.nombre }}</span>
+                                                    <h5 class="inline-block m-1">Rutas: </h5>
+                                                    <div class="flex flex-row">
+                                                        <span
+                                                            class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
+                                                            style="border: solid 1px #3b82f6; border-radius: 5px;"
+                                                            *ngFor="let ruta of curso.rutas;">{{ ruta.nombre }}</span>
+                                                    </div>
 
                                                 </div>
                                                 }@else {
                                                 <h5 class="mt-2 mb-2">No esta en una ruta de aprendizaje</h5>
                                                 }
-                                            </div>
-                                            <div class="mt-4">
-                                                <p><span class="font-bold">Creado el: </span>{{
-                                                    this.datePipe.transform(curso.createdAt, 'dd/MM/yyyy HH:MM:SS') }}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p><span class="font-bold">Ultima actualización: </span>{{
-                                                    this.datePipe.transform(curso.updateAt, 'dd/MM/yyyy HH:MM:SS') }}
-                                                </p>
                                             </div>
                                         </div>
                                     </div>
