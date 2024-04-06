@@ -17,7 +17,11 @@ import { SessionGuardian } from './guardians/session.guardian';
                     { path: 'seguridad', loadChildren: () => import('./paginas/usuarios/usuarios.module').then(m => m.UsuariosModule), canActivate: [AuthGuardian] },
                 ]
             },
-            { path: 'auth', loadChildren: () => import('./paginas/auth/auth.module').then(m => m.AuthModule), canActivate: [SessionGuardian] },
+            {
+                path: 'auth',
+                loadChildren: () => import('./paginas/auth/auth.module').then(m => m.AuthModule),
+                canActivate: [SessionGuardian]
+            },
             { path: 'notfound', component: NotfoundComponent },
             { path: '**', redirectTo: '/notfound' },
         ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload', useHash: true })

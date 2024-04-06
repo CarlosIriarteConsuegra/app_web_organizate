@@ -34,7 +34,6 @@ import { LoadingSpinnerComponent } from './components/loadingWindow/loading.comp
         CheckboxModule, ToastModule, FormsModule,
         ReactiveFormsModule, InputTextModule, ButtonModule,],
     providers: [
-        { provide: LocationStrategy, useClass: PathLocationStrategy },
         ConfigUrlService,
         ConfigUrlModule.init(),
         AuthService,
