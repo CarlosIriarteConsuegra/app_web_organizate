@@ -5,9 +5,9 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success mr-2 p-2"
+                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success rounded mr-2 p-2"
                             (click)="openNew()" *ngIf="tokenService.isAdmin()"></button>
-                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger p-2"
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger rounded p-2"
                             (click)="deleteSelectedUsuarios()"
                             [disabled]="!selectedUsuarios || !selectedUsuarios.length"
                             *ngIf="tokenService.isAdmin() && usuarios && usuarios.length > 0"></button>
@@ -64,10 +64,10 @@
                                         <div class="flex flex-column">
                                             <div class="flex" *ngIf="tokenService.isAdmin()">
                                                 <button pButton pRipple icon="pi pi-pencil"
-                                                    class="p-button-rounded p-button-success mr-2"
+                                                    class="rounded-circle p-button-success ml-3 mr-2" style="width: 40px; height: 40px;"
                                                     (click)="editUsuario(usuario)"></button>
                                                 <button pButton pRipple icon="pi pi-trash"
-                                                    class="p-button-rounded p-button-warning"
+                                                    class="rounded-circle p-button-warning" style="width: 40px; height: 40px;"
                                                     (click)="deleteUsuario(usuario)"></button>
                                             </div>
                                             <div class="mt-4">
