@@ -171,12 +171,13 @@
 
                 <div class="field">
                     <label for="descripcion">Descripción</label>
-                    <textarea id="descripcion" pInputTextarea [(ngModel)]="profesor.descripcion" maxlength="500"
+                    <textarea id="descripcion" pInputTextarea id="descripcion" [(ngModel)]="profesor.descripcion" maxlength="500"
                         required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !profesor.descripcion}"
                         rows="3" cols="20"></textarea>
                     <small class="ng-dirty ng-invalid" *ngIf="submitted && !profesor.descripcion">La descripción es
                         requerida.</small>
                 </div>
+
                 <div class="field">
                     <label>Redes sociales</label>
                     <div class="formgrid grid">

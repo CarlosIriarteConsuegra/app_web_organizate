@@ -97,7 +97,7 @@ export class ProfesoresComponent {
         this.submitted = true;
         this.profesoresEdit = this.profesores;
 
-        if (this.profesor.codigo?.trim() && this.profesor.nombre?.trim()) {
+        if (this.profesor.codigo?.trim() && this.profesor.nombre?.trim() && this.profesor.descripcion?.trim()) {
             if (this.profesor.id) {
                 this.loadingService.ejecutarLoading("Actualizando profesor...");
                 this.profesoresService.putProfesor(this.profesor).subscribe({
