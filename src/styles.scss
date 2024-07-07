@@ -27,3 +27,33 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+// Estilos selects
+.p-dropdown,
+.p-multiselect {
+    position: static !important;
+}
+
+.p-dropdown .p-dropdown-trigger {
+    width: 25px !important;
+}
+
+.p-dropdown .p-inputtext,
+.p-multiselect-label {
+    padding: 3px 5px !important;
+}
+
+.p-multiselect {
+    display: flex !important;
+    width: 100% !important;
+}
+
+.p-multiselect-label {
+    max-width: 300px;
+}
+
+.p-dropdown-label,
+.p-dropdown-label,
+.p-multiselect-label {
+    margin-top: 7px;
+}

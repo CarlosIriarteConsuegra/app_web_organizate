@@ -5,8 +5,9 @@
             <p-toolbar styleClass="mb-2 p-1">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success rounded mr-2 p-2"
-                            (click)="openNew()" *ngIf="tokenService.isAdmin()"></button>
+                        <button pButton pRipple label="Nueva" icon="pi pi-plus"
+                            class="p-button-success rounded mr-2 p-2" (click)="openNew()"
+                            *ngIf="tokenService.isAdmin()"></button>
                         <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger rounded p-2"
                             (click)="deleteSelectedCursos()" [disabled]="!selectedCursos || !selectedCursos.length"
                             *ngIf="tokenService.isAdmin() && cursos && cursos.length > 0"></button>
@@ -57,7 +58,7 @@
                                             <div class="text-xl font-bold text-900">{{ curso.codigo }}-{{ curso.nombre
                                                 }}</div>
                                             <div>
-                                                <p><span class="font-bold">Nivel: </span>{{ curso.nivel }}<br>
+                                                <p><span class="font-bold">Nivel: </span>{{ getNivel(curso.nivel) }}<br>
                                                     <span class="font-bold">Idioma: </span>{{ curso.idioma }}<br>
                                                     <span class="font-bold">Plataforma: </span>{{ curso.plataforma ?
                                                     curso.plataforma.nombre : "No esta asignado"}}
@@ -90,10 +91,12 @@
                                         <div class="col-6 container">
                                             <div class="row" *ngIf="tokenService.isAdmin()">
                                                 <button pButton pRipple icon="pi pi-pencil"
-                                                    class="rounded-circle p-button-success ml-3 mr-2" style="width: 40px; height: 40px;"
+                                                    class="rounded-circle p-button-success ml-3 mr-2"
+                                                    style="width: 40px; height: 40px;"
                                                     (click)="editCurso(curso)"></button>
                                                 <button pButton pRipple icon="pi pi-trash"
-                                                    class="rounded-circle p-button-warning" style="width: 40px; height: 40px;"
+                                                    class="rounded-circle p-button-warning"
+                                                    style="width: 40px; height: 40px;"
                                                     (click)="deleteCurso(curso)"></button>
                                             </div>
                                             <div class="row">
@@ -186,8 +189,9 @@
 
                 <div class="field">
                     <label for="plataforma">Plataforma</label>
-                    <p-dropdown [options]="plataformas" inputId="plataforma" [(ngModel)]="selectdPlataforma"
-                        optionLabel="nombre" optionValue="id" placeholder="Seleccionar plataforma">
+                    <p-dropdown [options]="plataformas" inputId="plataforma" [filter]="true" filterBy="nombre"
+                        [showClear]="true" [(ngModel)]="selectdPlataforma" optionLabel="nombre" optionValue="id"
+                        placeholder="Seleccionar plataforma">
                     </p-dropdown>
                 </div>
 
@@ -203,8 +207,12 @@
                 <div class="formgrid grid">
                     <div class="field col">
                         <label for="nivel">Nivel del Curso</label>
-                        <input type="number" pInputText id="link" maxlength="200" [(ngModel)]="curso.nivel" required
-                            autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.nivel}" />
+                        <p-dropdown [options]="nivelesCursos" inputId="number" [filter]="true" filterBy="descripcion"
+                            [showClear]="true" [(ngModel)]="curso.nivel" optionLabel="descripcion"
+                            optionValue="valor" placeholder="Seleccionar el nivel" 
+                            [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.nivel}">
+                        </p-dropdown>
+
                         <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.nivel">El nivel es
                             requerido.</small>
                     </div>
@@ -222,7 +230,7 @@
                         <label for="link">Link</label>
                         <input type="text" pInputText id="logo" maxlength="150" [(ngModel)]="curso.linkCurso" required
                             autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.linkCurso}" />
-                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.linkCurso">El logo es
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.linkCurso">El link del curso es
                             requerido.</small>
                     </div>
                     <div class="field col">
@@ -230,7 +238,7 @@
                         <input type="text" pInputText id="link" maxlength="200" [(ngModel)]="curso.linkCursoTeleg"
                             required autofocus
                             [ngClass]="{'ng-invalid ng-dirty' : submitted && !curso.linkCursoTeleg}" />
-                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.linkCursoTeleg">El link es
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !curso.linkCursoTeleg">El link de descarga es
                             requerido.</small>
                     </div>
                 </div>

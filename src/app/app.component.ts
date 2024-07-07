@@ -25,7 +25,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
     constructor(public layoutService: LayoutService, public renderer: Renderer2, public router: Router, private tokenService: TokenService) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
-            if (!this.menuOutsideClickListener) {
+            if (this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
                     const isOutsideClicked = !(this.appSidebar.el.nativeElement.isSameNode(event.target) || this.appSidebar.el.nativeElement.contains(event.target) 
                         || this.appTopbar.menuButton.nativeElement.isSameNode(event.target) || this.appTopbar.menuButton.nativeElement.contains(event.target));
@@ -36,7 +36,8 @@ export class AppComponent implements OnDestroy, OnInit {
                 });
             }
 
-            if (!this.profileMenuOutsideClickListener) {
+            if (this.profileMenuOutsideClickListener) {
+                console.log(this.profileMenuOutsideClickListener)
                 this.profileMenuOutsideClickListener = this.renderer.listen('document', 'click', event => {
                     const isOutsideClicked = !(this.appTopbar.menu.nativeElement.isSameNode(event.target) || this.appTopbar.menu.nativeElement.contains(event.target)
                         || this.appTopbar.topbarMenuButton.nativeElement.isSameNode(event.target) || this.appTopbar.topbarMenuButton.nativeElement.contains(event.target));
