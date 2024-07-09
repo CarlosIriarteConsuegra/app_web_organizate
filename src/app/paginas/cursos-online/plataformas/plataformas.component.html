@@ -5,9 +5,9 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success rounded mr-2 p-2"
+                        <button pButton pRipple label="Nueva" icon="pi pi-plus" class="p-button-success rounded mr-2 p-2 text-xs"
                             (click)="openNew()" *ngIf="tokenService.isAdmin()"></button>
-                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger rounded p-2"
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger rounded p-2 text-xs"
                             (click)="deleteSelectedPlataformas()"
                             [disabled]="!selectedPlataformas || !selectedPlataformas.length"
                             *ngIf="tokenService.isAdmin() && plataformas && plataformas.length > 0"></button>
@@ -15,7 +15,7 @@
                 </ng-template>
 
                 <ng-template pTemplate="right">
-                    <h5 class="m-0" *ngIf="plataformas && plataformas.length > 0">Total {{ plataformas.length }}
+                    <h5 class="m-0 text-xs" *ngIf="plataformas && plataformas.length > 0">Total {{ plataformas.length }}
                         Plataformas</h5>
                 </ng-template>
             </p-toolbar>
@@ -33,7 +33,7 @@
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search"></i>
                                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
-                                    placeholder="Buscar..." class="w-full sm:w-auto" />
+                                    placeholder="Buscar..." class="w-full sm:w-auto text-xs" />
                             </span>
                         </div>
                     </ng-template>
@@ -50,25 +50,25 @@
                             <td *ngIf="tokenService.isAdmin()">
                                 <p-tableCheckbox [value]="plataforma"></p-tableCheckbox>
                             </td>
-                            <td>
-                                <div class="flex flex-row xl:align-items-start p-4 gap-4 align-items-center" style="width:600px !important;">
-                                    <img class="w-2 shadow-2 block xl:block mx-auto border-round"
+                            <td class="p-1">
+                                <div class="flex flex-row xl:align-items-start p-2 gap-4 align-items-center" style="width:600px !important;">
+                                    <img class="w-1 shadow-2 block xl:block mx-auto border-round"
                                         [src]="plataforma.logo" [alt]="plataforma.nombre" />
                                     <div
                                         class="flex flex-row justify-content-between align-items-start flex-1 gap-4">
                                         <div class="flex flex-column align-items-center sm:align-items-start gap-2">
-                                            <div class="text-2xl font-bold text-900">{{ plataforma.codigo }}-{{ plataforma.nombre }}</div>
+                                            <div class="text-sm font-bold text-900">{{ plataforma.codigo }}-{{ plataforma.nombre }}</div>
                                             <div>
-                                                <p><span class="font-bold">Cursos: </span>{{ plataforma.cursosPlataforma ? plataforma.cursosPlataforma.length : 0 }}</p>
+                                                <p class="text-xs"><span class="font-bold">Cursos: </span>{{ plataforma.cursosPlataforma ? plataforma.cursosPlataforma.length : 0 }}</p>
                                             </div>
                                             <!--<p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>-->
-                                            <div class="text-1 text-700">
+                                            <div class="text-xs text-700">
                                                 <p>{{ plataforma.descripcion }}</p>
                                             </div>
                                             <div class="flex align-items-center gap-3">
                                                 <a [href]="plataforma.link" target="_blank" rel="noopener noreferrer">
                                                     <button pButton pRipple label="Ir a la plataforma"
-                                                        class="p-button-info rounded p-2"></button>
+                                                        class="p-button-info rounded p-2 text-xs"></button>
                                                 </a>
                                                 <!--<p-tag [value]="item.inventoryStatus" [severity]="getSeverity(item)"></p-tag>-->
                                             </div>
@@ -76,17 +76,17 @@
                                         <div class="flex flex-column">
                                             <div class="flex" *ngIf="tokenService.isAdmin()">
                                                 <button pButton pRipple icon="pi pi-pencil"
-                                                    class="rounded-circle p-button-success ml-3 mr-2" style="width: 40px; height: 40px;"
+                                                    class="rounded-circle p-button-success ml-3 mr-2" style="width: 30px; height: 30px;"
                                                     (click)="editPlataforma(plataforma)"></button>
                                                 <button pButton pRipple icon="pi pi-trash"
-                                                    class="rounded-circle p-button-warning" style="width: 40px; height: 40px;"
+                                                    class="rounded-circle p-button-warning" style="width: 30px; height: 30px;"
                                                     (click)="deletePlataforma(plataforma)"></button>
                                             </div>
                                             <div class="mt-4">
-                                                <p><span class="font-bold">Creado el: </span>{{ this.datePipe.transform(plataforma.createdAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
+                                                <p><span class="font-bold text-xs">Creado el: </span>{{ this.datePipe.transform(plataforma.createdAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
                                             </div>
                                             <div>
-                                                <p><span class="font-bold">Ultima actualización: </span>{{ this.datePipe.transform(plataforma.updateAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
+                                                <p><span class="font-bold text-xs">Ultima actualización: </span>{{ this.datePipe.transform(plataforma.updateAt, 'dd/MM/yyyy HH:MM:SS') }}</p>
                                             </div>
                                         </div>
                                     </div>

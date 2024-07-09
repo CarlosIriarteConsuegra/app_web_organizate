@@ -6,16 +6,16 @@
                 <ng-template pTemplate="left">
                     <div class="my-2">
                         <button pButton pRipple label="Nueva" icon="pi pi-plus"
-                            class="p-button-success rounded mr-2 p-2" (click)="openNew()"
+                            class="p-button-success rounded mr-2 p-2 text-xs" (click)="openNew()"
                             *ngIf="tokenService.isAdmin()"></button>
-                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger rounded p-2"
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger rounded p-2 text-xs"
                             (click)="deleteSelectedCursos()" [disabled]="!selectedCursos || !selectedCursos.length"
                             *ngIf="tokenService.isAdmin() && cursos && cursos.length > 0"></button>
                     </div>
                 </ng-template>
 
                 <ng-template pTemplate="right">
-                    <h5 class="m-0" *ngIf="cursos && cursos.length > 0">Total {{ cursos ? cursos.length : 0}} Cursos
+                    <h5 class="m-0 text-xs" *ngIf="cursos && cursos.length > 0">Total {{ cursos ? cursos.length : 0}} Cursos
                     </h5>
                 </ng-template>
             </p-toolbar>
@@ -34,7 +34,7 @@
                             <span class="block mt-1 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search"></i>
                                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
-                                    placeholder="Buscar..." class="w-full sm:w-auto" />
+                                    placeholder="Buscar..." class="w-full text-xs sm:w-auto" />
                             </span>
                         </div>
                     </ng-template>
@@ -51,14 +51,14 @@
                             <td *ngIf="tokenService.isAdmin()">
                                 <p-tableCheckbox [value]="curso"></p-tableCheckbox>
                             </td>
-                            <td>
-                                <div class="container p-1 align-items-start" style="width:100% !important;">
+                            <td  class="p-1">
+                                <div class="container p-0 align-items-start" style="width:100% !important;">
                                     <div class="row justify-content-between align-items-start">
-                                        <div class="col-6 flex flex-column align-items-start">
-                                            <div class="text-xl font-bold text-900">{{ curso.codigo }}-{{ curso.nombre
+                                        <div class="col-6 flex flex-column align-items-start p-2">
+                                            <div class="text-sm font-bold text-900">{{ curso.codigo }}-{{ curso.nombre
                                                 }}</div>
                                             <div>
-                                                <p><span class="font-bold">Nivel: </span>{{ getNivel(curso.nivel) }}<br>
+                                                <p class="text-xs"><span class="font-bold">Nivel: </span>{{ getNivel(curso.nivel) }}<br>
                                                     <span class="font-bold">Idioma: </span>{{ curso.idioma }}<br>
                                                     <span class="font-bold">Plataforma: </span>{{ curso.plataforma ?
                                                     curso.plataforma.nombre : "No esta asignado"}}
@@ -67,9 +67,9 @@
                                             </div>
                                             <!--<p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>-->
                                             <div class="text-1 text-700">
-                                                <p class="text-justify">{{ curso.descripcion }}</p>
+                                                <p class="text-justify text-xs">{{ curso.descripcion }}</p>
                                             </div>
-                                            <div class="flex align-items-center gap-3">
+                                            <div class="flex align-items-center gap-3 text-xs">
                                                 <div class="flex align-items-center gap-3" *ngIf="curso.linkCurso">
                                                     <a [href]="curso.linkCurso" target="_blank"
                                                         rel="noopener noreferrer">
@@ -82,30 +82,30 @@
                                                     <a [href]="curso.linkCursoTeleg" target="_blank"
                                                         rel="noopener noreferrer">
                                                         <button pButton pRipple label="Descargar curso"
-                                                            class="p-button-info rounded p-2"></button>
+                                                            class="p-button-info rounded p-1"></button>
                                                     </a>
                                                     <!--<p-tag [value]="item.inventoryStatus" [severity]="getSeverity(item)"></p-tag>-->
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-6 container">
+                                        <div class="col-6 container p-2">
                                             <div class="row" *ngIf="tokenService.isAdmin()">
                                                 <button pButton pRipple icon="pi pi-pencil"
                                                     class="rounded-circle p-button-success ml-3 mr-2"
-                                                    style="width: 40px; height: 40px;"
+                                                    style="width: 30px; height: 30px;"
                                                     (click)="editCurso(curso)"></button>
                                                 <button pButton pRipple icon="pi pi-trash"
                                                     class="rounded-circle p-button-warning"
-                                                    style="width: 40px; height: 40px;"
+                                                    style="width: 30px; height: 30px;"
                                                     (click)="deleteCurso(curso)"></button>
                                             </div>
                                             <div class="row">
                                                 @if (curso.areascurso != null && curso.areascurso.length > 0) {
                                                 <div class="row">
-                                                    <h5 class="inline-block m-1">Areas del Curso: </h5>
+                                                    <h5 class="inline-block m-1 text-xs">Areas del Curso: </h5>
                                                     <div>
                                                         <span
-                                                            class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
+                                                            class="font-bold text-xs text-white bg-primary p-2 m-2 min-w-max inline-block"
                                                             style="border: solid 1px #3b82f6; border-radius: 5px;"
                                                             *ngFor="let areaCursos of curso.areascurso;">{{
                                                             areaCursos.nombre
@@ -113,15 +113,15 @@
                                                     </div>
                                                 </div>
                                                 }@else {
-                                                <h5 class="mt-2 mb-2 row">No hay areas de cursos asignadas</h5>
+                                                <h5 class="mt-2 mb-2 row text-xs">No hay areas de cursos asignadas</h5>
                                                 }
 
                                                 @if (curso.profesores != null && curso.profesores.length > 0) {
                                                 <div>
-                                                    <h5 class="inline-block m-1">Profesores: </h5>
+                                                    <h5 class="inline-block m-1 text-xs">Profesores: </h5>
                                                     <div class="flex flex-row">
                                                         <span
-                                                            class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
+                                                            class="font-bold text-xs text-white bg-primary p-2 m-2 min-w-max inline-block"
                                                             style="border: solid 1px #3b82f6; border-radius: 5px;"
                                                             *ngFor="let profesor of curso.profesores;">{{
                                                             profesor.nombre
@@ -129,22 +129,22 @@
                                                     </div>
                                                 </div>
                                                 }@else {
-                                                <h5 class="mt-2 mb-2">No hay profesores asignados</h5>
+                                                <h5 class="mt-2 mb-2 text-xs">No hay profesores asignados</h5>
                                                 }
 
                                                 @if (curso.rutas != null && curso.rutas.length > 0) {
                                                 <div>
-                                                    <h5 class="inline-block m-1">Rutas: </h5>
+                                                    <h5 class="inline-block m-1 text-xs">Rutas: </h5>
                                                     <div class="flex flex-row">
                                                         <span
-                                                            class="font-bold text-white bg-primary p-2 m-2 min-w-max inline-block"
+                                                            class="font-bold text-xs text-white bg-primary p-2 m-2 min-w-max inline-block"
                                                             style="border: solid 1px #3b82f6; border-radius: 5px;"
                                                             *ngFor="let ruta of curso.rutas;">{{ ruta.nombre }}</span>
                                                     </div>
 
                                                 </div>
                                                 }@else {
-                                                <h5 class="mt-2 mb-2">No esta en una ruta de aprendizaje</h5>
+                                                <h5 class="mt-2 mb-2 text-xs">No esta en una ruta de aprendizaje</h5>
                                                 }
                                             </div>
                                         </div>
@@ -156,7 +156,7 @@
                 </p-table>
             </ng-container>
             <ng-container *ngIf="!(cursos && cursos.length > 0)">
-                <h1 class="text-center">No tienes cursos registrados</h1>
+                <h1 class="text-center text-sm">No tienes cursos registrados</h1>
             </ng-container>
         </div>
 
